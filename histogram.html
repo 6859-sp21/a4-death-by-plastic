@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+  </head>
+  <body>
+    <h2>Year</h2>
+    <div class="row align-items-center">
+      <div class="col-sm-2"><p id="value-time"></p></div>
+      <div class="col-sm"><div id="slider-time"></div></div>
+    </div>
+    <div id="chart">
+      <!-- This is where we will put our chart. -->
+    </div>
+ 
+    <script>
+      d3.csv("https://raw.githubusercontent.com/6859-sp21/a4-death-by-plastic/main/datasets/microplastics-in-ocean.csv").then(microplastics => {
+        const minYear = 1950;
+        const maxYear = 2050;
+        const minWeight = 0;
+        const maxWeight = 3000000;
+
+        const entity = "Emissions growth to 2050";
+        const data = microplastics.filter(d => d.Entity === entity);
+
+        // don't currently have a formula or data for total fish weight
+        const testFishWeightFormula = function (year) {
+          return year*1000;
+        }
+
+        let selected = [
+          data.filter(d => d.Year === minYear.toString())[0],
+          {"Value": testFishWeightFormula(minYear), "isFishWeight": true}
+          ];
+
+        const height = 200;
+        const width = 500;
+        const margin = ({top: 10, right: 25, bottom: 20, left: 25});
+        const categories = ["Fish Weight", "Plastics Weight"];
+
+        colorScale = d3.scaleOrdinal(d3.schemeTableau10).domain(categories); 
+
+        xScale = d3.scaleLinear()
+          .domain([minWeight, maxWeight])
+          .range([0, width]);
+        xMargin = xScale.copy().range([margin.left, width - margin.right])
+
+        yScale = d3.scaleBand()
+          .domain(categories)
+          .range([height, 0]);
+        yMargin = yScale.copy().range([height - margin.bottom, margin.top])
+
+        const container = d3.create('svg')
+          .attr('width', width)
+          .attr('height', height)
+          .style('border', '1px dotted #999');
+
+        const update = function() {
+          // add SVG 'rect' elements for bars
+          container.selectAll('rect')
+            .data(selected)
+            .join('rect')
+              .attr('x', 0)
+              .attr('y', 0)
+              .attr('width', d => xMargin(d.Value) - xMargin(0))
+              .attr('height', yMargin.bandwidth())
+              .style('fill', d => colorScale(d.isFishWeight ? "Fish Weight" : "Plastics Weight"))
+              .style('stroke', 'white')
+              .attr('transform', d => `translate(${margin.left}, ${yMargin(d.isFishWeight ? "Fish Weight" : "Plastics Weight")})`);
+          
+          // add SVG 'text' elements for labels
+          container.selectAll('text')
+            .data(selected)
+            .join('text')
+              .attr('x', d => 5 + xMargin(d.Value))
+              .attr('y', (d, i) => i * yMargin.bandwidth() + yMargin.bandwidth()/2)
+              .attr('dy', '1.2em')
+              .attr('fill', 'black')
+              .style('font-size', 'small')
+              .text(d => d.Value)
+          
+          // add x-axis
+          container.append('g')
+            .attr('transform', `translate(0, ${height - margin.bottom})`)
+            .call(d3.axisBottom(xMargin).ticks(5));
+          
+          // add y-axis with rotated labels
+          container.append('g')
+            .attr('transform', `translate(${margin.left}, 0)`)
+            .call(d3.axisLeft(yMargin))
+            .selectAll("text")
+              .attr("dx", "3em")
+              .attr("dy", "-1em")
+              .attr("transform", "rotate(-90)");
+        };
+
+        update();
+        
+        const sliderTime = d3
+          .sliderBottom()
+          .min(minYear)
+          .max(maxYear)
+          .step(1)
+          .width(450)
+          .tickFormat(d3.format(""))
+          .default(1950)
+          .on('onchange', val => {
+            d3.select('p#value-time').text(val);
+            selected = [
+                data.filter(d => d.Year === val.toString())[0],
+                {"Value": testFishWeightFormula(val), "isFishWeight": true}
+              ];
+            update();
+          });
+
+        const gTime = d3
+          .select('div#slider-time')
+          .append('svg')
+          .attr('width', 500)
+          .attr('height', 100)
+          .append('g')
+          .attr('transform', 'translate(30,30)');
+
+        gTime.call(sliderTime);
+
+        d3.select('p#value-time').text(sliderTime.value());
+
+        document.getElementById("chart").appendChild(container.node());
+
+      });
+      </script>
+  </body>
+</html>
