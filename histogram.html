@@ -35,7 +35,7 @@
 
         const height = 200;
         const width = 500;
-        const margin = ({top: 10, right: 25, bottom: 20, left: 25});
+        const margin = ({top: 10, right: 25, bottom: 40, left: 25});
         const categories = ["Fish Weight", "Plastics Weight"];
 
         colorScale = d3.scaleOrdinal(d3.schemeTableau10).domain(categories); 
@@ -82,15 +82,24 @@
           // add x-axis
           container.append('g')
             .attr('transform', `translate(0, ${height - margin.bottom})`)
-            .call(d3.axisBottom(xMargin).ticks(5));
+            .call(d3.axisBottom(xMargin).ticks(5))
+            .append('text')
+              .attr('text-anchor', 'middle')
+              .attr('fill', 'black')
+              .attr('font-size', '12px')
+              .attr('font-weight', 'bold')
+              .attr('x', width/2)
+              .attr('y', 35)
+              .text('Weight (tonnes)');
           
           // add y-axis with rotated labels
           container.append('g')
             .attr('transform', `translate(${margin.left}, 0)`)
             .call(d3.axisLeft(yMargin))
             .selectAll("text")
-              .attr("dx", "3em")
+              .attr("dx", "1em")
               .attr("dy", "-1em")
+              .style("text-anchor", "middle")
               .attr("transform", "rotate(-90)");
         };
 
