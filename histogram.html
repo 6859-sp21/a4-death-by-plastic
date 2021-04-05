@@ -18,7 +18,8 @@
       </div>
   
       <div id="chart"></div>
-  
+      <div id="lineChart"></div>
+
       <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
@@ -54,6 +55,11 @@
         interval: false,
       });
 
+      const globalData = []
+      d3.csv("https://raw.githubusercontent.com/6859-sp21/a4-drowning-in-plastic/main/datasets/global-plastics-production.csv", function(data) {
+        globalData.push(data)
+      });
+
       d3.csv("https://raw.githubusercontent.com/6859-sp21/a4-death-by-plastic/main/datasets/microplastics-in-ocean.csv").then(microplastics => {
         d3.csv("https://raw.githubusercontent.com/6859-sp21/a4-death-by-plastic/main/datasets/macroplastics-in-ocean.csv").then(macroplastics => {  
           const minYear = 1950;
@@ -66,11 +72,15 @@
           const entity = "Emissions growth to 2050";
           const microData = microplastics.filter(d => d.Entity === entity);
           const macroData = macroplastics.filter(d => d.Entity === entity);
+          // const globalData = lineData.filter(d => d.Entity === entity);
+          console.log(globalData)
 
           let selected = [
             microData.filter(d => d.Year === minYear.toString())[0],
             macroData.filter(d => d.Year === minYear.toString())[0],
             ];
+
+
 
           const height = 200;
           const width = 500;
@@ -89,12 +99,96 @@
             .range([height, 0]);
           yMargin = yScale.copy().range([height - margin.bottom, margin.top])
 
-          const container = d3.create('svg')
-            .attr('width', width)
-            .attr('height', height)
-            .style('border', '1px dotted #999');
+
+          //////////////////////////////////////////////////
+          /////////////// Line chart axes /////////////
+          //////////////////////////////////////////////////
+
+          // Add X axis for lien chart --> it is a date format
+          let x = d3.scaleTime()
+              .domain([minYear, maxYear])
+              .range([ 0, width ]);
+          var xLineAxis = d3.axisBottom(x).tickFormat(d3.format("d")).ticks(5);
+
+          // Add Y axis
+          let y = d3.scaleLinear()
+            .domain([0, d3.max(globalData, function(d) { return +d.Value; })])
+            .range([ height, 0 ]);
+          var yLineAxis = d3.axisLeft(y).ticks(6);
+
           
-          const update = function() {
+          
+          const container = d3.create('svg')
+          .attr('width', width)
+          .attr('height', height)
+          .style('border', '1px dotted #999');
+          
+          
+          // append the svg object to the body of the page
+          const svg = d3.select("#lineChart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform","translate(" + margin.left + "," + margin.top + ")");
+          
+          let xLineScale = svg.append("g");
+          xLineScale.attr("transform", "translate(0," + height + ")").call(xLineAxis);
+
+          let yLineScale = svg.append("g");
+          yLineScale.call(yLineAxis);
+
+          // Add the area
+          const curve = svg.append("path")
+              .datum(globalData)
+              .attr("fill", "#cce5df")
+              .attr("stroke", "#69b3a2")
+              .attr("stroke-width", 1.5)
+              .attr("d", d3.area()
+                .x(function(d) { return x(d.Year) })
+                .y0(y(0))
+                .y1(function(d) { return y(d.Value) })
+                )
+
+          svg.selectAll("circle")
+            .data(globalData)
+            .join("circle")
+            .attr("fill", "blue")
+            .attr("stroke", "none")
+            .attr("cx", function(d) { return x(d.Year) })
+            .attr("cy", function(d) { return y(d.Value) })
+            .attr("r", 3)   
+
+          const update = function(val) {
+            const newYear = 2050 - val
+            const newIndex = 101 - (2050 - val)
+            const newData = globalData.slice(0, newIndex)
+            x.domain([minYear, val])
+                .range([ 0, width ]);
+            y.domain([0, d3.max(newData, function(d) { return +d.Value; })])
+              .range([ height, 0 ]);
+
+            xLineScale.call(xLineAxis);
+
+            yLineScale.call(yLineAxis);
+
+            curve
+                .datum(newData)
+                .attr("d", d3.area()
+                .x(function(d) { return x(d.Year) })
+                .y0(y(0))
+                .y1(function(d) { return y(d.Value) })
+                )
+            
+            svg.selectAll("circle")
+              .data(newData)
+              .join("circle")
+              .attr("fill", "blue")
+              .attr("stroke", "none")
+              .attr("cx", function(d) { return x(d.Year) })
+              .attr("cy", function(d) { return y(d.Value) })
+              .attr("r", 3)
+
             // add SVG 'rect' elements for bars
             container.selectAll('rect')
               .data(selected)
@@ -158,7 +252,7 @@
                   microData.filter(d => d.Year === val.toString())[0],
                   macroData.filter(d => d.Year === val.toString())[0]
                 ];
-              update();
+              update(val);
               //todo only update when different
               $('.carousel').carousel(Math.floor(val/10-195)); // rotate carousel to index correlated to nearest decade(floor)
             });

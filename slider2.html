@@ -30,7 +30,6 @@ d3.csv("https://raw.githubusercontent.com/6859-sp21/a4-death-by-plastic/main/dat
 }).then(() => {
   
   dataset = listData.filter(d => d.Entity === "Emissions growth to 2050");
-  console.log(dataset);
     // Add X axis --> it is a date format
     let x = d3.scaleTime()
         .domain([1950, 2050])
@@ -149,7 +148,7 @@ d3.csv("https://raw.githubusercontent.com/6859-sp21/a4-death-by-plastic/main/dat
     .max(2050)
     .step(1)
     .width(300)
-    .value(2050)
+    .value(0)
     .displayValue(false)
     .on('onchange', (val) => {
       d3.select('#value').text(val);
