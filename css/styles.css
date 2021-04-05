@@ -1,0 +1,16 @@
+.body-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-items: center;
+    justify-self: center;
+    text-align: center;
+}
+#chart, h2 {
+    width: 100%;
+}
+.slide {
+    height:300px; 
+    width:1000px;
+}
