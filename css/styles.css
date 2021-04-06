@@ -28,3 +28,7 @@
 .handle {
     outline: none;
 }
+/* Carousel Transition Speed */
+.carousel-inner .carousel-item {
+    transition: transform .5s ease;
+}
