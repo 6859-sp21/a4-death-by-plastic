@@ -72,16 +72,15 @@
 
       d3.csv("https://raw.githubusercontent.com/6859-sp21/a4-death-by-plastic/main/datasets/microplastics-in-ocean.csv").then(microplastics => {
         d3.csv("https://raw.githubusercontent.com/6859-sp21/a4-death-by-plastic/main/datasets/macroplastics-in-ocean.csv").then(macroplastics => {  
-          const minYear = 1950;
-          const maxYear = 2015;
+          const minYear = 1950; // inclusive
+          const maxYear = 2015; // inclusive
+          const entity = "Emissions growth to 2050";
+          const microData = microplastics.filter(d => d.Entity === entity && d.Year >= minYear && d.Year <= maxYear);
+          const macroData = macroplastics.filter(d => d.Entity === entity && d.Year >= minYear && d.Year <= maxYear);
           const minWeight = 0;
           const maxWeight = Math.round(d3.max(
-            microplastics.concat(macroplastics), d => parseInt(d.Value)
-          )/1000000)*1000000; // round max weight to nearest million
-
-          const entity = "Emissions growth to 2050";
-          const microData = microplastics.filter(d => d.Entity === entity);
-          const macroData = macroplastics.filter(d => d.Entity === entity);
+            microData.concat(macroData), d => parseInt(d.Value)
+          )/1000000)*1000000; // max weight rounded to nearest million
           // const globalData = lineData.filter(d => d.Entity === entity);
 
           let selected = [
@@ -93,7 +92,7 @@
 
           const height = 300;
           const width = 500;
-          const margin = ({top: 10, right: 60, bottom: 40, left: 25});
+          const margin = ({top: 10, right: 40, bottom: 40, left: 25});
           const categories = ["Microplastics", "Macroplastics"];
           
           // Line chart
@@ -136,7 +135,6 @@
           const container = d3.create('svg')
           .attr('width', width)
           .attr('height', height)
-          .style('border', '1px dotted #999');
           
           
           // append the svg object to the body of the page
