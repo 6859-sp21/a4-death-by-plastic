@@ -3,14 +3,28 @@
     justify-content: center;
     flex-wrap: wrap;
     align-items: center;
-    justify-items: center;
-    justify-self: center;
     text-align: center;
+    margin-top: 5rem;
 }
 #chart, h2 {
     width: 100%;
 }
 .slide {
-    height:300px; 
-    width:1000px;
+    /* width: 50%; */
+    max-width: 600px;
+}
+/* .carousel-container {
+    
+} */
+.slider-container {
+    width: 100%;
+}
+#line-chart {
+    width: 800px;
+}
+.axis, text {
+    font-size: 14px;
+}
+.handle {
+    outline: none;
 }
