@@ -92,7 +92,7 @@
 
           const height = 300;
           const width = 500;
-          const margin = ({top: 10, right: 40, bottom: 40, left: 25});
+          const margin = ({top: 40, right: 40, bottom: 40, left: 25});
           const categories = ["Microplastics", "Macroplastics"];
           
           // Line chart
@@ -222,11 +222,24 @@
               .data(selected)
               .join('text')
                 .attr('x', d => 5 + xMargin(d.Value))
-                .attr('y', (d, i) => yMargin.bandwidth()*(1.5-i))
-                .attr('dy', '1.2em')
+                .attr('y', (d, i) => yMargin.bandwidth()*(2-i))
+                .attr('dy', '-1em')
                 .attr('fill', 'black')
                 .style('font-size', 'small')
                 .text(d => d.Value)
+
+            container.selectAll('g').remove();
+
+            // add title
+            container.append('g')
+              .append('text')
+                .attr('text-anchor', 'middle')
+                .attr('fill', 'black')
+                .style('font-size', '18px')
+                .attr('x', width/2)
+                .attr('y', margin.top)
+                .attr('dy', '-.5em')
+                .text('Plastics on Ocean Surface');
             
             // add x-axis
             container.append('g')
@@ -235,7 +248,6 @@
               .append('text')
                 .attr('text-anchor', 'middle')
                 .attr('fill', 'black')
-                .attr('font-size', '12px')
                 .attr('font-weight', 'bold')
                 .attr('x', width/2)
                 .attr('y', 35)
