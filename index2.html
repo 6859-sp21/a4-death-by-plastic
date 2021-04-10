@@ -224,6 +224,10 @@
 
           const fatePie = d3.pie();
 
+          var fateTooltip = d3.select("body").append("div")
+            .attr("class", "fate-tooltip")
+            .style("opacity", 0);
+
           const genFateText = function(d) {
             switch (d.Entity) {
               case "Discarded":
@@ -353,7 +357,19 @@
                 .attr("stroke", "white")
                 .style("stroke-width", "1px")
                 .attr("fill", (d,i) => fateColor(fateDataFiltered[i].Entity))
-                .attr("d", fateArcGenerator);
+                .attr("d", fateArcGenerator)
+                .on("mouseover", function(event,d) {
+                  fateTooltip.transition()
+                    .style("opacity", .95);
+                  fateTooltip.html(fateDataFiltered[d.index].Entity + "<br/>" + `${d.value}%`)
+                    .style("left", (event.pageX) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+                  })
+                .on("mouseout", function(d) {
+                  fateTooltip.transition()
+                    .style("opacity", 0);
+                  });
+
             fateSVG
               .selectAll("arc")
               .data(fatePie(fateDataFiltered.map(d => d["Estimated historic plastic fate"])))
