@@ -109,7 +109,7 @@
           const fontSize = 16;
           
           // Line chart
-          const lineMargin =  {top: 30, right: 30, bottom: 30, left: 100},
+          const lineMargin =  {top: 50, right: 30, bottom: 50, left: 100},
                 lineWidth = 800 - lineMargin.left - lineMargin.right,
                 lineHeight = 500 - lineMargin.top - lineMargin.bottom;
 
@@ -158,12 +158,34 @@
             .attr("height", lineHeight + lineMargin.top + lineMargin.bottom )
             .append("g")
             .attr("transform","translate(" + lineMargin.left + "," + lineMargin.top + ")");
-          
+
+
+
           let xLineScale = svg.append("g");
-          xLineScale.attr("transform", "translate(0," + lineHeight + ")").style("font-size", "14px").call(xLineAxis);
+          xLineScale
+            .attr("transform", "translate(0," + lineHeight + ")")
+            .style("font-size", "14px")
+            .call(xLineAxis)
+            .append('text')
+                  .attr('text-anchor', 'middle')
+                  .attr('fill', 'black')
+                  .attr('font-weight', 'bold')
+                  .attr('x', lineWidth/2)
+                  .attr('y', 45)
+                  .text('Year');
+            
 
           let yLineScale = svg.append("g");
-          yLineScale.style("font-size", "14px").call(yLineAxis);
+          yLineScale
+            .style("font-size", "14px")
+            .call(yLineAxis)
+            .append('text')
+                  .attr('text-anchor', 'middle')
+                  .attr('fill', 'black')
+                  .attr('font-weight', 'bold')
+                  .attr('x', 0 - lineMargin.right)
+                  .attr('y', 0 - 20)
+                  .text('Tonnes');;
 
           // Add the line
           const curve = svg.append("path")
@@ -232,6 +254,13 @@
                 .attr("cy", function(d) { return y(d.Value) })
                 .attr("r", 3)
 
+            //     svg.append('text')
+            // .attr("transform",
+            //   "translate(" + (lineWidth/2) + " ," + 
+            //                 (lineHeight + lineMargin.top + 20) + ")")
+            // .style("text-anchor", "middle")
+            // .text("Year");   
+
             // Line cursor logic adapted from https://www.d3-graph-gallery.com/graph/line_cursor.html
             
             // This allows to find the closest X index of the mouse:
@@ -270,20 +299,22 @@
 
             // What happens when the mouse move -> show the annotations at the right positions.
             function mouseover() {
-              focus
-                  .attr('r', 9)
-                  .attr("fill", "steelblue")
-                  .attr("stroke", "white")
-                  .attr("cx", x(selectedData.Year))
-                  .attr("cy", y(selectedData.Value))
-                  .style('opacity', .6)
+              if (selectedData) {
+                focus
+                    .attr('r', 9)
+                    .attr("fill", "steelblue")
+                    .attr("stroke", "white")
+                    .attr("cx", x(selectedData.Year))
+                    .attr("cy", y(selectedData.Value))
+                    .style('opacity', .6)
+              }
               focusTextYear.style("opacity",.3)
               focusTextValue.style("opacity",.6)
             }
 
             function toolTipBoundingBox(x) {
               let offset = 220;
-              if (x <= 10000000) offset -= 0;
+              if (x <= 10000000) offset += 0;
               else if (x > 10000000 && x <= 100000000) offset += fontSize;
               else  offset += (2 * fontSize);
               
