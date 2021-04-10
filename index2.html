@@ -67,6 +67,8 @@
 
     </div>
     <script>
+      const githubDatasetsURL = "https://raw.githubusercontent.com/6859-sp21/a4-drowning-in-plastic/main/datasets/";
+      
       $('.carousel').carousel({
         interval: false,
       });
@@ -79,12 +81,17 @@
       const weightObjects = ['']
 
       const globalData = []
-      d3.csv("https://raw.githubusercontent.com/6859-sp21/a4-drowning-in-plastic/main/datasets/global-plastics-production-edit.csv", function(data) {
+      d3.csv(githubDatasetsURL + "global-plastics-production-edit.csv", function(data) {
         globalData.push(data)
       });
 
-      d3.csv("https://raw.githubusercontent.com/6859-sp21/a4-death-by-plastic/main/datasets/microplastics-in-ocean.csv").then(microplastics => {
-        d3.csv("https://raw.githubusercontent.com/6859-sp21/a4-death-by-plastic/main/datasets/macroplastics-in-ocean.csv").then(macroplastics => {  
+      const fateData = [];
+      d3.csv(githubDatasetsURL + "global-plastic-fate.csv", function(data) {
+        fateData.push(data)
+      });
+
+      d3.csv(githubDatasetsURL + "microplastics-in-ocean.csv").then(microplastics => {
+        d3.csv( githubDatasetsURL + "macroplastics-in-ocean.csv").then(macroplastics => {  
           const minYear = 1950; // inclusive
           const maxYear = 2015; // inclusive
           const entity = "Emissions growth to 2050";
