@@ -197,20 +197,35 @@
 
           let maxValue = 0;
           
-          // // Plastic Fate Chart Dimensions
-          // const [fateWidth, fateHeight, fateMargin] = [450, 450, 40];
-          // const fateRadius = Math.min(fateWidth, fateHeight) / 2 - fateMargin;
+          //////////////////////////////////////////////////
+          ////////////////// FATE CHART ////////////////////
+          //////////////////////////////////////////////////
 
-          // const fateSVG = d3.select("#fate-chart")
-          //   .append("svg")
-          //     .attr("width", fateWidth)
-          //     .attr("height", fateHeight)
-          //   .append("g")
-          //     .attr("transform", "translate(" + fateWidth / 2 + "," + fateHeight / 2 + ")");
-          // const fateArcGenerator = d3.arc()
-          //   .innerRadius(0)
-          //   .outerRadius(fateRadius);
+          const [fateWidth, fateHeight, fateMargin] = [450, 450, 40];
+          const fateRadius = Math.min(fateWidth, fateHeight) / 2 - fateMargin;
 
+          const fateSVG = d3.select("#fate-chart")
+            .append("svg")
+              .attr("width", fateWidth)
+              .attr("height", fateHeight)
+            .append("g")
+              .attr("transform", "translate(" + fateWidth / 2 + "," + fateHeight / 2 + ")");
+
+          const fateColor = d3.scaleOrdinal()
+            .domain(["Discarded", "Incinerated", "Recycled"])
+            .range(d3.schemeSet2);
+
+          let fateDataFiltered = fateData.filter(d => d.Year === "2000");
+          
+          const fateArcGenerator = d3.arc()
+            .innerRadius(75)
+            .outerRadius(fateRadius);
+
+          const fatePie = d3.pie();
+
+          //////////////////////////////////////////////////
+          ////////////////// UPDATE ////////////////////
+          //////////////////////////////////////////////////
           const update = function(val) {
             const newYear = maxYear - val
             const newIndex = globalData.length - (maxYear - val)
@@ -313,6 +328,26 @@
                 .attr("dy", "-1em")
                 .style("text-anchor", "middle")
                 .attr("transform", "rotate(-90)");
+            
+
+            // FATE CHART
+            fateDataFiltered = fateData.filter(d => d.Year === val.toString());
+            fateSVG
+              .selectAll("arc")
+              .data(fatePie(fateDataFiltered.map(d => d["Estimated historic plastic fate"])))
+              .join("path")
+                .attr("stroke", "black")
+                .style("stroke-width", "2px")
+                .attr("fill", (d,i) => fateColor(fateDataFiltered[i].Entity))
+                .attr("d", fateArcGenerator);
+            fateSVG
+              .selectAll("arc")
+              .data(fatePie(fateDataFiltered.map(d => d["Estimated historic plastic fate"])))
+              .join('text')
+                .text((d,i) => fateDataFiltered[i].Entity)
+                .attr("transform", d => "translate(" + fateArcGenerator.centroid(d) + ")")
+                .style("text-anchor", "middle")
+                .style("font-size", 17);
           };
 
           update(1950);
