@@ -51,6 +51,7 @@
         </div>
       </div>
       <div id="chart"></div>
+      <div id="fate-chart"></div>
       <div>
         <br />
         <h5>Sources</h5>
@@ -188,6 +189,20 @@
             .attr("r", 3)   
 
           let maxValue = 0;
+          
+          // // Plastic Fate Chart Dimensions
+          // const [fateWidth, fateHeight, fateMargin] = [450, 450, 40];
+          // const fateRadius = Math.min(fateWidth, fateHeight) / 2 - fateMargin;
+
+          // const fateSVG = d3.select("#fate-chart")
+          //   .append("svg")
+          //     .attr("width", fateWidth)
+          //     .attr("height", fateHeight)
+          //   .append("g")
+          //     .attr("transform", "translate(" + fateWidth / 2 + "," + fateHeight / 2 + ")");
+          // const fateArcGenerator = d3.arc()
+          //   .innerRadius(0)
+          //   .outerRadius(fateRadius);
 
           const update = function(val) {
             const newYear = maxYear - val
