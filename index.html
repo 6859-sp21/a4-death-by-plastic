@@ -106,11 +106,12 @@
           const width = 500;
           const margin = ({top: 40, right: 40, bottom: 40, left: 25});
           const categories = ["Microplastics", "Macroplastics"];
+          const fontSize = 16;
           
           // Line chart
-          const lineMargin =  {top: 30, right: 30, bottom: 30, left: 100}
-          const lineWidth = 800 - lineMargin.left - lineMargin.right
-          const lineHeight = 500 - lineMargin.top - lineMargin.bottom;
+          const lineMargin =  {top: 30, right: 30, bottom: 30, left: 100},
+                lineWidth = 800 - lineMargin.left - lineMargin.right,
+                lineHeight = 500 - lineMargin.top - lineMargin.bottom;
 
 
           colorScale = d3.scaleOrdinal(d3.schemeTableau10).domain(categories); 
@@ -142,8 +143,6 @@
             .range([ lineHeight, 0 ]);
           var yLineAxis = d3.axisLeft(y).ticks(6);
 
-          
-          
           const container = d3.create('svg')
           .attr('width', width)
           .attr('height', height)
@@ -155,8 +154,8 @@
           // append the svg object to the body of the page
           const svg = d3.select("#line-chart")
             .append("svg")
-            .attr("width", lineWidth + lineMargin.left + lineMargin.right)
-            .attr("height", lineHeight + lineMargin.top + lineMargin.bottom)
+            .attr("width", lineWidth + lineMargin.left + lineMargin.right )
+            .attr("height", lineHeight + lineMargin.top + lineMargin.bottom )
             .append("g")
             .attr("transform","translate(" + lineMargin.left + "," + lineMargin.top + ")");
           
@@ -166,7 +165,7 @@
           let yLineScale = svg.append("g");
           yLineScale.style("font-size", "14px").call(yLineAxis);
 
-          // Add the area
+          // Add the line
           const curve = svg.append("path")
               .datum(globalData)
               .attr("fill", "none")
@@ -187,7 +186,20 @@
             .attr("cy", function(d) { return y(d.Value) })
             .attr("r", 3)   
 
+          // const focus = svg
+          //     .append('g')
+          //     .append('circle')
+          //     .style("fill", "black")
+          //     .attr("stroke", "none")
+          //     .attr('r', 6)
+          //     .style("opacity", 0)
+
           let maxValue = 0;
+
+          /////////////////////////////////////////
+          ///// Add y-axis hover tooltips /////////
+          /////////////////////////////////////////
+
 
           const update = function(val) {
             const newYear = maxYear - val
@@ -219,20 +231,102 @@
                 .attr("cx", function(d) { return x(d.Year) })
                 .attr("cy", function(d) { return y(d.Value) })
                 .attr("r", 3)
-                // tooltip adapted from https://bl.ocks.org/d3noob/180287b6623496dbb5ac4b048813af52
-                .on("mouseover", function(event,d) {
-                  div.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                  div.html(d.Year + "<br/>" + d.Value)
-                    .style("left", (event.pageX) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-                  })
-                .on("mouseout", function(d) {
-                  div.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-                  });
+
+            // Line cursor logic adapted from https://www.d3-graph-gallery.com/graph/line_cursor.html
+            
+            // This allows to find the closest X index of the mouse:
+            var bisect = d3.bisector(function(d) { return d.Year; }).left;
+
+            // Create the text that accompanies your cursor
+            var focusTextYear = svg
+              .append('g')
+              .append('text')
+              .style("opacity", 0)
+              .style('font-size', 70)
+              .style('font-weight', 700)
+              
+            var focusTextValue = svg
+              .append('g')
+              .append('text')
+              .style("opacity", 0)
+              .style('font-size', 30)
+              .style('fill', 'steelblue')
+
+            // Create a rect on top of the svg area: this rectangle recovers mouse position
+            svg
+              .append('rect')
+              .style("fill", "none")
+              .style("pointer-events", "all")
+              .attr('width', lineWidth+15)
+              .attr('height', lineHeight)
+              .on('mouseover', mouseover)
+              .on('mousemove', mousemove)
+              .on('mouseout', mouseout);
+
+            // Extra larger circle that appears when hovered over
+            const focus = svg.append('circle');
+
+            let selectedData = null;
+
+            // What happens when the mouse move -> show the annotations at the right positions.
+            function mouseover() {
+              focus
+                  .attr('r', 9)
+                  .attr("fill", "steelblue")
+                  .attr("stroke", "white")
+                  .attr("cx", x(selectedData.Year))
+                  .attr("cy", y(selectedData.Value))
+                  .style('opacity', .6)
+              focusTextYear.style("opacity",.3)
+              focusTextValue.style("opacity",.6)
+            }
+
+            function toolTipBoundingBox(x) {
+              let offset = 220;
+              if (x <= 10000000) offset -= 0;
+              else if (x > 10000000 && x <= 100000000) offset += fontSize;
+              else  offset += (2 * fontSize);
+              
+              return lineWidth - offset;
+            }
+            function mousemove(event) {
+              // recover coordinate we need
+              var x0 = x.invert(d3.pointer(event)[0]);
+              var i = bisect(newData, x0, 0);
+              selectedData = newData[i]
+              if(selectedData) {
+                focus
+                  .attr('r', 9)
+                  .attr("fill", "steelblue")
+                  .attr("stroke", "white")
+                  .attr("cx", x(selectedData.Year))
+                  .attr("cy", y(selectedData.Value))
+                  .style('opacity', .6)
+                focusTextYear
+                  .html(selectedData.Year )
+                  .attr("x", lineWidth - 150)
+                  .attr("y", lineHeight - 50)
+                  .style('opacity', .3)
+                } 
+                focusTextValue
+                  .html(numberWithCommas(selectedData.Value) + " tonnes")
+                  .attr("x", toolTipBoundingBox(selectedData.Value))
+                  .attr("y", lineHeight - 20)
+                  .style('opacity', .6)
+              }
+            function mouseout() {
+              if (selectedData) {
+                focus
+                    .attr('r', 3)
+                    .attr("fill", "black")
+                    .attr("stroke", "none")
+                    .attr("cx", x(selectedData.Year))
+                    .attr("cy", y(selectedData.Value))
+              }
+              focusTextYear.style("opacity", 0)
+              focusTextValue.style("opacity", 0)
+            }
+
 
             // add SVG 'rect' elements for bars
             container.selectAll('rect')
