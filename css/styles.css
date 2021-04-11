@@ -13,16 +13,15 @@
     /* width: 50%; */
     max-width: 600px;
 }
-#slider-time {
-
+#title {
 }
 .slider-container {
-    position: fixed; 
-    bottom: 1%;
+    /* position: fixed; 
+    top: 20%;
     left: 50%;
-    margin-left: -450px; /* Half of the width */
+    margin-left: -450px; 
     background-color: white;
-    box-shadow: 4px 3px 3px silver;
+    box-shadow: 4px 3px 3px silver; */
 }
 .context-container {
     width: 100%;
