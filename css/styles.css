@@ -13,10 +13,18 @@
     /* width: 50%; */
     max-width: 600px;
 }
-/* .carousel-container {
-    
-} */
+#slider-time {
+
+}
 .slider-container {
+    position: fixed; 
+    bottom: 1%;
+    left: 50%;
+    margin-left: -450px; /* Half of the width */
+    background-color: white;
+    box-shadow: 4px 3px 3px silver;
+}
+.context-container {
     width: 100%;
 }
 #line-chart {

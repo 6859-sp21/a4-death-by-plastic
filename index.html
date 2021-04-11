@@ -11,9 +11,13 @@
   <body>
     <div class="body-container">
       <h1>Crumbling Under the Weight of Plastic</h1>
-      <!-- <h2>Year</h2> -->
       <div class="slider-container">
-        <div id="slider-time"></div>
+        <h3>Year Slider</h3>
+        <button id="play-button">Play</button>
+        <div onclick="pauseAnimation()" id="slider-time"></div>
+      </div>
+      <!-- <h2>Year</h2> -->
+      <div class="context-container">
         <h4 id="value-total"></h4>
         <h5 id="value-time"></h5>
       </div>
@@ -70,9 +74,19 @@
         interval: false,
       });
 
+      var timer = 0;
       //Source: https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
       function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      function pauseAnimation() {
+        moving = false;
+        if (timer) {
+          clearInterval(timer);
+        }
+        // timer = 0;
+        d3.select(document.getElementById('play-button')).text("Play");
       }
 
       const weightObjects = ['']
@@ -125,6 +139,22 @@
             .domain(categories)
             .range([height, 0]);
           yMargin = yScale.copy().range([height - margin.bottom, margin.top])
+
+          function updateSlider(val) {
+              const newIndex = calculateCarousel(val);
+              sliderIndex = newIndex;
+              d3.select('h4#value-total').text("In " + val + ", the world produced " + numberWithCommas(maxValue) + " tonnes of plastic in a single year");
+              d3.select('h5#value-time').text("That's more than the mass of " + sliderDescriptions[sliderIndex]);
+              selected = [
+                  microData.filter(d => d.Year === val.toString())[0],
+                  macroData.filter(d => d.Year === val.toString())[0]
+                ];
+              $('.carousel').carousel(newIndex); // rotate carousel to index correlated to nearest decade(floor)
+          }
+
+          let moving = false;
+          let currentValue = minYear;
+          let targetValue = maxYear;
 
 
           //////////////////////////////////////////////////
@@ -447,18 +477,48 @@
             .tickFormat(d3.format(""))
             .default(1950)
             .on('onchange', val => {
-              const newIndex = calculateCarousel(val);
-              sliderIndex = newIndex;
-              d3.select('h4#value-total').text("In " + val + ", the world produced " + numberWithCommas(maxValue) + " tonnes of plastic in a single year");
-              d3.select('h5#value-time').text("That's more than the mass of " + sliderDescriptions[sliderIndex]);
-              selected = [
-                  microData.filter(d => d.Year === val.toString())[0],
-                  macroData.filter(d => d.Year === val.toString())[0]
-                ];
-              update(val);
-              //todo only update when different
-              $('.carousel').carousel(newIndex); // rotate carousel to index correlated to nearest decade(floor)
+              if (val <= maxYear) {
+                currentValue = val;
+                updateSlider(val);
+                update(val);
+                //todo only update when different
+              }
             });
+
+          const playButton = d3.select("#play-button");
+          
+          playButton
+            .on("click", function(event) {
+              const button = d3.select(this);
+              if (button.text() == "Pause") {
+                moving = false;
+                clearInterval(timer);
+                // timer = 0;
+                button.text("Play");
+            } else {
+              if (currentValue < targetValue) {
+                moving = true;
+                timer = setInterval(step, 300);
+                button.text("Pause");
+              }
+            }
+          })
+
+          function step() {
+            // console.log('invert: ',x.invert(-100).getYear())
+            currentValue = currentValue + 1;
+            if (currentValue > targetValue) {
+              moving = false;
+              clearInterval(timer);
+              // timer = 0;
+              playButton.text("Play");
+              console.log("Slider moving: " + moving);
+            } else {
+              update(currentValue);
+              updateSlider(currentValue)
+              sliderTime.value(currentValue)
+            }
+          }
 
           const gTime = d3
             .select('div#slider-time')
