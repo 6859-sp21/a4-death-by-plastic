@@ -134,6 +134,7 @@
             .domain([minWeight, maxWeight])
             .range([0, width]);
           xMargin = xScale.copy().range([margin.left, width - margin.right])
+          
 
           yScale = d3.scaleBand()
             .domain(categories)
@@ -163,9 +164,10 @@
 
           // Add X axis for line chart --> it is a date format
           let x = d3.scaleTime()
-              .domain([minYear, maxYear])
+              .domain([new Date(minYear, 0), new Date(maxYear, 0)])
               .range([ 0, lineWidth ]);
-          var xLineAxis = d3.axisBottom(x).tickFormat(d3.format("d")).ticks(5);
+          var xLineAxis = d3.axisBottom(x).tickFormat(d3.timeFormat("%Y")).ticks(5);
+          // console.log(x(new Date("01-01-1950")))
 
           // Add Y axis
           let y = d3.scaleLinear()
@@ -224,7 +226,7 @@
               .attr("stroke", "black")
               .attr("stroke-width", 1.5)
               .attr("d", d3.line()
-                .x(function(d) { return x(d.Year) })
+                .x(function(d) { return x(new Date(d.Year, 0)) })
                 // .y0(y(0))
                 .y(function(d) { return y(d.Value) })
                 )
@@ -234,7 +236,7 @@
             .join("circle")
             .attr("fill", "black")
             .attr("stroke", "white")
-            .attr("cx", function(d) { return x(d.Year) })
+            .attr("cx", function(d) { return x(new Date(d.Year, 0)) })
             .attr("cy", function(d) { return y(d.Value) })
             .attr("r", 3)   
 
@@ -258,7 +260,7 @@
             const newIndex = globalData.length - (maxYear - val)
             const newData = globalData.slice(0, newIndex)
             maxValue = d3.max(newData, function(d) { return +d.Value; })
-            x.domain([minYear, val])
+            x.domain([new Date(minYear, 0), new Date(val, 0)])
                 .range([ 0, lineWidth ]);
             y.domain([0, maxValue])
               .range([ lineHeight, 0 ]);
@@ -270,7 +272,7 @@
             curve
                 .datum(newData)
                 .attr("d", d3.line()
-                .x(function(d) { return x(d.Year) })
+                .x(function(d) { return x(new Date(d.Year, 0)) })
                 // .y(y(0))
                 .y(function(d) { return y(d.Value) })
                 )
@@ -280,7 +282,7 @@
               .join("circle")
                 .attr("fill", "black")
                 .attr("stroke", "white")
-                .attr("cx", function(d) { return x(d.Year) })
+                .attr("cx", function(d) { return x(new Date(d.Year, 0)) })
                 .attr("cy", function(d) { return y(d.Value) })
                 .attr("r", 3)
 
@@ -294,7 +296,7 @@
             // Line cursor logic adapted from https://www.d3-graph-gallery.com/graph/line_cursor.html
             
             // This allows to find the closest X index of the mouse:
-            var bisect = d3.bisector(function(d) { return d.Year; }).left;
+            var bisect = d3.bisector(function(d) { return new Date(d.Year, 0); }).center;
 
             // Create the text that accompanies your cursor
             var focusTextYear = svg
@@ -334,7 +336,7 @@
                     .attr('r', 9)
                     .attr("fill", "steelblue")
                     .attr("stroke", "white")
-                    .attr("cx", x(selectedData.Year))
+                    .attr("cx", x(new Date(selectedData.Year, 0)))
                     .attr("cy", y(selectedData.Value))
                     .style('opacity', .6)
               }
@@ -360,7 +362,7 @@
                   .attr('r', 9)
                   .attr("fill", "steelblue")
                   .attr("stroke", "white")
-                  .attr("cx", x(selectedData.Year))
+                  .attr("cx", x(new Date(selectedData.Year, 0)))
                   .attr("cy", y(selectedData.Value))
                   .style('opacity', .6)
                 focusTextYear
@@ -381,7 +383,7 @@
                     .attr('r', 3)
                     .attr("fill", "black")
                     .attr("stroke", "none")
-                    .attr("cx", x(selectedData.Year))
+                    .attr("cx", x(new Date(selectedData.Year, 0)))
                     .attr("cy", y(selectedData.Value))
               }
               focusTextYear.style("opacity", 0)
@@ -485,6 +487,7 @@
               }
             });
 
+          // Play button logic adapted from https://d19jftygre6gh0.cloudfront.net/officeofjane/47d2b0bfeecfcb41d2212d06d095c763
           const playButton = d3.select("#play-button");
           
           playButton
