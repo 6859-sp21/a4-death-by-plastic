@@ -20,7 +20,7 @@
   
       <div id="line-chart"></div>
       <div class="carousel-container">
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <div id="carousel-viz" class="carousel slide" data-ride="carousel">
           <div class="carousel-inner">
             <div class="carousel-item active">
               <img class="d-block w-100" src="img/eiffel_tower.png" alt="First slide">
@@ -64,7 +64,12 @@
         <a href="https://www.newser.com/story/259238/the-10-heaviest-objects-on-earth.html">Heaviest Object on Earth Weighs 116B Pounds</a>
         <br />
       </div>
-
+      <!--
+      <div id="carouselTooltip" class="carousel-tooltip" style="opacity: 0;">
+        <h1 id="carouselTooltipName"></h1>
+        <p id="carouselTooltipWeight"></h1>
+      </div>
+    -->
     </div>
     <script>
       const githubDatasetsURL = "https://raw.githubusercontent.com/6859-sp21/a4-drowning-in-plastic/main/datasets/";
@@ -90,6 +95,27 @@
         fateData.push(data)
       });
 
+      const monuments = [
+        {"name": "Eiffel Tower",
+         "weight": "TODO"},
+        {"name": "Washington Monument",
+         "weight": "162.2 million pounds or 73,572 metric tonnes"},
+        {"name": "Pioneering Spirit Crane Vessel",
+         "weight": "365,000 metric tonnes"},
+        {"name": "Shanghai Tower",
+         "weight": "TODO"},
+        {"name": "Burj Khalifa",
+         "weight": "2.2 million metric tonnes"},
+        {"name": "Pyramids of Khufu",
+         "weight": "12 billion pounds or 5,443,108 metric tonnes"},
+        {"name": "Three Gorges Dam",
+         "weight": " 20.8 billion pounds or 9,434,721 metric tonnes"},
+        {"name": "Great Wall of China",
+         "weight": "116 billion pounds or 52,616,715 metric tonnes"},
+      ];
+
+      // let selectedMonument = monuments[0];
+
       d3.csv(githubDatasetsURL + "microplastics-in-ocean.csv").then(microplastics => {
         d3.csv( githubDatasetsURL + "macroplastics-in-ocean.csv").then(macroplastics => {  
           const minYear = 1950; // inclusive
@@ -114,6 +140,26 @@
           const width = 500;
           const margin = ({top: 40, right: 40, bottom: 40, left: 25});
           const categories = ["Microplastics", "Macroplastics"];
+          
+          //Carousel Tooltip
+          let carouselTooltip = d3.select("body").append("div")
+            .attr("class", "carousel-tooltip")
+            .attr("id", "carouselTooltip")
+            .style("opacity", 0)
+            .html(monuments[0].name + "</br>" + monuments[0].weight);
+
+          d3.select("#carousel-viz")
+            .on("mouseover", function(event,d) {
+              carouselTooltip.transition()
+                .style("opacity", 1);
+              carouselTooltip
+                .style("left", (event.pageX) + "px")
+                .style("top", (event.pageY - 28) + "px");
+              })
+            .on("mouseout", function(d) {
+              carouselTooltip.transition()
+                .style("opacity", 0);
+              });
           
           // Line chart
           const lineMargin =  {top: 30, right: 30, bottom: 30, left: 100}
@@ -224,7 +270,7 @@
 
           const fatePie = d3.pie();
 
-          var fateTooltip = d3.select("body").append("div")
+          let fateTooltip = d3.select("body").append("div")
             .attr("class", "fate-tooltip")
             .style("opacity", 0);
 
@@ -414,6 +460,7 @@
               sliderIndex = newIndex;
               d3.select('h4#value-total').text("In " + val + ", the world produced " + numberWithCommas(maxValue) + " tonnes of plastic in a single year");
               d3.select('h5#value-time').text("That's more than the mass of " + sliderDescriptions[sliderIndex]);
+              carouselTooltip.html(monuments[sliderIndex].name + "</br>" + monuments[sliderIndex].weight);
               selected = [
                   microData.filter(d => d.Year === val.toString())[0],
                   macroData.filter(d => d.Year === val.toString())[0]
