@@ -72,7 +72,7 @@
       <div class="slider-container">
         <button id="play-button">Play</button>
         <div class="slider-details">
-          <h3>Adjust the Year</h3>
+          <h3 style="margin-bottom: 10px;">Adjust the Year</h3>
           <div onclick="pauseAnimation()" id="slider-time"></div>
         </div>
       </div>
@@ -431,6 +431,23 @@
                       </div>`;
           };
 
+          // This allows to find the closest X index of the mouse:
+          const bisect = d3.bisector(function(d) { return new Date(d.Year, 0); }).center;
+
+          // Create the text that accompanies your cursor
+          const focusTextYear = svg
+            .append('g')
+            .append('text')
+            .style("opacity", 0)
+            .style('font-size', 70)
+            .style('font-weight', 700)
+              
+          const focusTextValue = svg
+            .append('g')
+            .append('text')
+            .style("opacity", 0)
+            .style('font-size', 30)
+            .style('fill', 'steelblue')
 
           //////////////////////////////////////////////////
           ////////////////// UPDATE ////////////////////
@@ -446,9 +463,17 @@
             y.domain([0, maxValue])
               .range([ lineHeight, 0 ]);
 
-            xLineScale.call(xLineAxis);
+            xLineScale
+            .transition()
+            .duration(150)
+            .ease(d3.easeLinear)
+            .call(xLineAxis);
 
-            yLineScale.call(yLineAxis);
+            yLineScale
+            .transition()
+            .duration(150)
+            .ease(d3.easeLinear)
+            .call(yLineAxis);
 
             curve
                 .datum(newData)
@@ -469,29 +494,30 @@
 
             // Line cursor logic adapted from https://www.d3-graph-gallery.com/graph/line_cursor.html
             
-            // This allows to find the closest X index of the mouse:
-            var bisect = d3.bisector(function(d) { return new Date(d.Year, 0); }).center;
+            // // This allows to find the closest X index of the mouse:
+            // var bisect = d3.bisector(function(d) { return new Date(d.Year, 0); }).center;
 
           /////////////////////////////////////////
           ///// Add y-axis hover tooltips /////////
           /////////////////////////////////////////
 
-            // Create the text that accompanies your cursor
-            var focusTextYear = svg
-              .append('g')
-              .append('text')
-              .style("opacity", 0)
-              .style('font-size', 70)
-              .style('font-weight', 700)
+            // // Create the text that accompanies your cursor
+            // var focusTextYear = svg
+            //   .append('g')
+            //   .append('text')
+            //   .style("opacity", 0)
+            //   .style('font-size', 70)
+            //   .style('font-weight', 700)
               
-            var focusTextValue = svg
-              .append('g')
-              .append('text')
-              .style("opacity", 0)
-              .style('font-size', 30)
-              .style('fill', 'steelblue')
+            // var focusTextValue = svg
+            //   .append('g')
+            //   .append('text')
+            //   .style("opacity", 0)
+            //   .style('font-size', 30)
+            //   .style('fill', 'steelblue')
 
             // Create a rect on top of the svg area: this rectangle recovers mouse position
+            svg.selectAll('rect').remove();
             svg
               .append('rect')
               .style("fill", "none")
@@ -578,6 +604,9 @@
             container.selectAll('rect')
               .data(selected)
               .join('rect')
+                .transition()
+                .duration(150)
+                .ease(d3.easeLinear)
                 .attr('x', 0)
                 .attr('y', 0)
                 .attr('width', d => xMargin(d.Value) - xMargin(0))
@@ -590,6 +619,9 @@
             container.selectAll('text')
               .data(selected)
               .join('text')
+                .transition()
+                .duration(150)
+                .ease(d3.easeLinear)
                 .attr('x', d => 5 + xMargin(d.Value))
                 .attr('y', (d, i) => yMargin.bandwidth()*(2-i))
                 .attr('dy', '-1em')
