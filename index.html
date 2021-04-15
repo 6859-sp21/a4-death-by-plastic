@@ -195,6 +195,18 @@
          "img": "wall-tip.jpg"},
       ];
 
+      const fateImageSrcs = {
+        "Discarded": "img/discarded.jpg",
+        "Recycled": "img/recycled.jpg",
+        "Incinerated": "img/incinerated.jpg",
+      };
+
+      const fateDescriptions = {
+        "Discarded": "Most plastics end up in landfills where it may take up to 500 years to decompose, and potentially leak pollutants into the soil and water. Even plastics that people believe they are recycling can end up here.",
+        "Recycled": "Mechanical recycling involves washing, grinding, and melting the plastics. Chemical recycling breaks the plastics down into monomers. These can then be used in products such as bottles, trash bags, or kitchenware.",
+        "Incinerated": "Burning plastic and other wastes releases dangerous substances such as heavy metals, persistent organic pollutants (POPs), and other toxins into the air.",
+      };
+
     d3.csv(githubDatasetsURL + "microplastics-in-ocean.csv").then(microplastics => {
       d3.csv( githubDatasetsURL + "macroplastics-in-ocean.csv").then(macroplastics => {  
           const minYear = 1950; // inclusive
@@ -392,6 +404,15 @@
               .attr("height", fateHeight)
             .append("g")
               .attr("transform", "translate(" + fateWidth / 2 + "," + fateHeight / 2 + ")");
+            
+          const fateSvgText = fateSVG
+            .append("text")
+              .attr("text-anchor", "middle")
+              .text("2015")
+              .style("font-family", "Montserrat")
+              .style("font-size", "24px")
+              .attr("fill", "steelblue")
+              .attr("dy", ".5em");
 
           const fateColor = d3.scaleOrdinal()
             .domain(["Discarded", "Incinerated", "Recycled"])
@@ -423,10 +444,12 @@
           }
 
           const genFateHTML = function(entity, value) {
-              return `<div class="card">
+              return `<div class="card" style="width: 18rem;">
+                        <img class="card-img-top" style="max-height:300px;" src="${fateImageSrcs[entity]}" alt="Card image cap">
                         <div class="card-body">
-                          <h5 class="card-title">${entity}</h5>
-                          <h6 class="card-subtitle mb-2 text-muted">${value}%</h6>
+                          <h5 style="font-family:'Montserrat'; color:steelblue;">${entity}</h5>
+                          <h6 style="font-family:'Montserrat'; font-weight:bold;" class="card-subtitle text-muted">${value}%</h6>
+                          <p class="mb-0" style="font-size:14px">${fateDescriptions[entity]}</p>
                         </div>
                       </div>`;
           };
@@ -676,7 +699,7 @@
                 .attr("d", fateArcGenerator)
                 .on("mouseover", function(event,d) {
                   fateTooltip.transition()
-                    .style("opacity", .95);
+                    .style("opacity", 1);
                   fateTooltip.html(genFateHTML(fateDataFiltered[d.index].Entity,d.value))
                     .style("left", (event.pageX) + "px")
                     .style("top", (event.pageY - 28) + "px");
@@ -700,6 +723,8 @@
                 .style("text-anchor", "middle")
                 .style("fill", "white")
                 .style("font-size", 17);
+
+            fateSvgText.text(val);
           };
 
           update(1950);
