@@ -26,7 +26,7 @@
       
       <div class="primary-visual">
         <div id="line-chart">
-          <p id="text-desc">
+          <p id="fate-desc">
             Ever since the invention of the first plastic, Bakelite, in 1907, the world has developed a love for plastics that’s grown every year since. 
             However, it wasn’t until 1950 onward that global plastic production skyrocketed as production increased nearly 200 fold over the next 65 years. 
           </p>
@@ -77,8 +77,8 @@
       </div>
       <div class="secondary-visual">
         <div class="context-container">
-          <h4>The Fate of Plastics and The Myth of Recycling</h4>
-          <p id="text-desc">Annual plastic production is clearly showing no signs of slowing down. Contributing to this exponential growth is the myth of recycling. 
+          <h4 id="fate-desc">The Fate of Plastics and The Myth of Recycling</h4>
+          <p id="fate-desc">Annual plastic production is clearly showing no signs of slowing down. Contributing to this exponential growth is the myth of recycling. 
             Before 1980, recycling and incineration was negligible as most plastics were discarded (sent to landfills). Since 1987, there has been a 
             gradual increase in recycling rates, but the overwhelming majority of plastics continue to be incinerated or recycled. 
             In 2015, an estimate of only 20% of global plastic waste was recycled.
@@ -89,9 +89,9 @@
 
       <div class="tertiary-visual">
         <div id="chart"></div>
-        <div class="context-container">
+        <div id="ocean-context" class="context-container">
           <h4>Consequences on the Ocean</h4>
-          <p id="text-desc">The discarded plastic does not decompose, destined to end up in some different region of the environment, such as the oceans. 
+          <p id="ocean-desc">The discarded plastic does not decompose, destined to end up in some different region of the environment, such as the oceans. 
             These plastics that enter the ocean take the form of microplastics and macroplastics. Microplastics are buoyant plastic materials smaller than 0.5 centimeters 
             in diameter (half the width of your pinky), while macroplastics are those greater than 0.5 centimeters in diameter. 
             At least 233 marine species have been documented to ingest these microplastics, eventually ending up in our food supply.
@@ -249,7 +249,7 @@
 
           // Line chart
           const lineMargin =  {top: 50, right: 30, bottom: 50, left: 100},
-                lineWidth = 800 - lineMargin.left - lineMargin.right,
+                lineWidth = 700 - lineMargin.left - lineMargin.right,
                 lineHeight = 500 - lineMargin.top - lineMargin.bottom;
 
 

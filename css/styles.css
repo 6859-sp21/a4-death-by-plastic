@@ -31,8 +31,11 @@ body {
 .secondary-visual, .tertiary-visual {
     align-items: center;
 }
-#text-desc, h4 {
-    margin-left: 100px;
+#fate-desc {
+    padding-left: 100px;
+}
+#ocean-desc {
+
 }
 p {
     font-family: 'Poppins';
@@ -61,6 +64,7 @@ h1, h2, h3, h4 {
     display: flex;
     justify-content: center;
     flex-flow: wrap;
+    min-width: 700px;
     max-width: 700px;
     max-height: 520px;
     margin: 0 50px;
@@ -68,12 +72,15 @@ h1, h2, h3, h4 {
 }
 .context-container {
     /* width: 100%; */
-    max-width: 800px;
+    max-width: 600px;
     margin-bottom: 20px;
     margin: 0 50px;
 }
+#ocean-context {
+    padding-right: 100px;
+}
 #line-chart {
-    width: 800px;
+    width: 700px;
     margin: 0 50px;
 }
 .axis, text {
@@ -92,7 +99,7 @@ h1, h2, h3, h4 {
     width: 700px;
 }
 #chart {
-    padding-left: 140px;
+    /* padding-left: 140px; */
 }
 
 div.tooltip {
