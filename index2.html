@@ -154,10 +154,10 @@
           //Carousel Tooltip
           const genCarouselHTML = function(index) {
               return `<div class="card" style="width: 18rem;">
-                        <img class="card-img-top" style="max-width: 400px; max-height:300px;" src="img/${monuments[index].img}" alt="Card image cap">
+                        <img class="card-img-top" style="max-height:300px;" src="img/${monuments[index].img}" alt="Card image cap">
                         <div class="card-body">
                           <h5 class="card-title">${monuments[index].name}</h5>
-                          <p class="card-text">${monuments[index].weight}</p>
+                          <h6 class="card-subtitle mb-2 text-muted">${monuments[index].weight}</h6>
                         </div>
                       </div>`;
           };
@@ -307,6 +307,17 @@
                 return "";
             }
           }
+          
+          // From Here
+          const genFateHTML = function(entity, value) {
+              return `<div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">${entity}</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">${value}%</h6>
+                        </div>
+                      </div>`;
+          };
+          // To Here
 
           //////////////////////////////////////////////////
           ////////////////// UPDATE ////////////////////
@@ -427,8 +438,10 @@
                 .attr("d", fateArcGenerator)
                 .on("mouseover", function(event,d) {
                   fateTooltip.transition()
-                    .style("opacity", .95);
-                  fateTooltip.html(fateDataFiltered[d.index].Entity + "<br/>" + `${d.value}%`)
+                    .style("opacity", 1);
+                  // From Here
+                  fateTooltip.html(genFateHTML(fateDataFiltered[d.index].Entity,d.value))
+                  // To Here
                     .style("left", (event.pageX) + "px")
                     .style("top", (event.pageY - 28) + "px");
                   })

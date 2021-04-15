@@ -55,13 +55,6 @@ div.tooltip {
 
  .fate-tooltip {
     position: absolute;
-    text-align: center;
-    padding: 10px;
-    font: 17px sans-serif;
-    background: white;
-    border: 2px;
-    border-color: black;
-    border-radius: 8px;
     pointer-events: none;
   }
 
