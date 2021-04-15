@@ -130,3 +130,7 @@ div.tooltip {
     position: absolute;
     pointer-events: none;
 }
+
+.source-container {
+    margin-bottom: 50px;
+}
