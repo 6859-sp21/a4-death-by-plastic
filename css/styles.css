@@ -13,8 +13,9 @@ body {
 }
 .title-image {
     margin-bottom: 80px;
-    width:1200px;
-    height:800px;
+    max-width: 60%;
+    height: auto;
+    width: auto; /* ie8 */
     margin-left: 150px;
 }
 .title-container {
@@ -66,7 +67,7 @@ h1, h2, h3, h4 {
 
 }
 .context-container {
-    width: 100%;
+    /* width: 100%; */
     max-width: 800px;
     margin-bottom: 20px;
     margin: 0 50px;
