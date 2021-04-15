@@ -196,9 +196,9 @@
       ];
 
       const fateImageSrcs = {
-        "Discarded": "img/discarded.jpg",
-        "Recycled": "img/recycled.jpg",
-        "Incinerated": "img/incinerated.jpg",
+        "Discarded": "discarded.jpg",
+        "Recycled": "recycled.jpg",
+        "Incinerated": "incinerated.jpg",
       };
 
       const fateDescriptions = {
@@ -223,9 +223,7 @@
           let selected = [
             microData.filter(d => d.Year === "2015")[0],
             macroData.filter(d => d.Year === "2015")[0],
-            ];
-
-
+          ];
 
           const height = 350;
           const width = 550;
@@ -233,13 +231,13 @@
           const categories = ["Microplastics", "Macroplastics"];
           const fontSize = 16;
           
-          //Carousel Tooltip
-          const genCarouselHTML = function(index) {
-              return  `<div class="card" style="width: 18rem;">
-                        <img class="card-img-top" style="max-height:300px;" src="img/${monuments[index].img}" alt="Card image cap">
+          const genCardHTML = function(src, title, subtitle, paragraph = " ") {
+              return `<div class="card" style="width: 18rem;">
+                        <img class="card-img-top" style="max-height:300px;" src="img/${src}" alt="Card image cap">
                         <div class="card-body">
-                          <h5 style="font-family:'Montserrat'; color:steelblue;">${monuments[index].name}</h5>
-                          <h6 style="font-family:'Montserrat'; font-weight:bold;" class="card-subtitle text-muted">${monuments[index].weight}</h6>
+                          <h5 style="font-family:'Montserrat'; color:steelblue;">${title}</h5>
+                          <h6 style="font-family:'Montserrat'; font-weight:bold;" class="card-subtitle text-muted">${subtitle}</h6>
+                          <p class="mb-0" style="font-size:14px">${paragraph}</p>
                         </div>
                       </div>`;
           };
@@ -248,7 +246,7 @@
             .attr("class", "carousel-tooltip")
             .attr("id", "carouselTooltip")
             .style("opacity", 0)
-            .html(genCarouselHTML(0));
+            .html(genCardHTML(monuments[0].img, monuments[0].name, monuments[0].weight));
 
           d3.select("#carousel-viz")
             .on("mouseover", function(event,d) {
@@ -291,11 +289,7 @@
               sliderIndex = newIndex;
               d3.select('p#value-total').text("In " + val + ", the world produced " + numberWithCommas(maxValue) + " tonnes of plastic in a single year");
               d3.select('p#value-time').text("That's more than the mass of " + sliderDescriptions[sliderIndex]);
-              carouselTooltip.html(genCarouselHTML(sliderIndex));
-              selected = [
-                  microData.filter(d => d.Year === val.toString())[0],
-                  macroData.filter(d => d.Year === val.toString())[0]
-                ];
+              carouselTooltip.html(genCardHTML(monuments[sliderIndex].img, monuments[sliderIndex].name, monuments[sliderIndex].weight));
               $('.carousel').carousel(newIndex); // rotate carousel to index correlated to nearest decade(floor)
           }
 
@@ -439,17 +433,6 @@
             }
           }
 
-          const genFateHTML = function(entity, value) {
-              return `<div class="card" style="width: 18rem;">
-                        <img class="card-img-top" style="max-height:300px;" src="${fateImageSrcs[entity]}" alt="Card image cap">
-                        <div class="card-body">
-                          <h5 style="font-family:'Montserrat'; color:steelblue;">${entity}</h5>
-                          <h6 style="font-family:'Montserrat'; font-weight:bold;" class="card-subtitle text-muted">${value}%</h6>
-                          <p class="mb-0" style="font-size:14px">${fateDescriptions[entity]}</p>
-                        </div>
-                      </div>`;
-          };
-
           // FATE CHART
           fateDataFiltered = fateData.filter(d => d.Year === "2015");
           fateSVG
@@ -463,7 +446,7 @@
               .on("mouseover", function(event,d) {
                 fateTooltip.transition()
                   .style("opacity", 1);
-                fateTooltip.html(genFateHTML(fateDataFiltered[d.index].Entity,d.value))
+                fateTooltip.html(genCardHTML(fateImageSrcs[fateDataFiltered[d.index].Entity], fateDataFiltered[d.index].Entity, d.value + "%", fateDescriptions[fateDataFiltered[d.index].Entity]))
                   .style("left", (event.pageX) + "px")
                   .style("top", (event.pageY - 28) + "px");
                 })
@@ -487,6 +470,10 @@
               .style("fill", "white")
               .style("font-size", 17);
 
+          let barTooltip = d3.select("body").append("div")
+            .attr("class", "fate-tooltip")
+            .style("opacity", 0);
+
           // add SVG 'rect' elements for bars
           container.selectAll('rect')
             .data(selected)
@@ -497,7 +484,27 @@
               .attr('height', yMargin.bandwidth())
               .style('fill', (d,i) => colorScale(categories[i]))
               .style('stroke', 'white')
-              .attr('transform', (d,i) => `translate(${margin.left}, ${yMargin(categories[i])})`);
+              .attr('transform', (d,i) => `translate(${margin.left}, ${yMargin(categories[i])})`)
+              .on("mouseover", function(event,d) {
+                console.log(d);
+                barTooltip.transition()
+                  .style("opacity", 1);
+                barTooltip.html(genCardHTML(`${d.Value === "934100" ? "macroplastics.jpg" : "microplastics.png"}`, 
+                                            `${d.Value === "934100" ? "Macroplastics" : "Microplastics"}`, 
+                                            `${numberWithCommas(d.Value)}`,
+                                            `${d.Value === "934100" ? "Macroplastics are buoyant plastic materials larger than 0.5 centimeters in diameter. Examples include water bottles, packaging, or straws." : "Microplastics are buoyant plastic materials smaller than 0.5 centimeters in diameter. They can be hard to see, but easily ingested."}`))
+                  .style("left", (event.pageX) + "px")
+                  .style("top", (event.pageY - 28) + "px");
+                })
+              .on("mousemove", function(event,d) {
+                barTooltip
+                  .style("left", (event.pageX) + "px")
+                  .style("top", (event.pageY - 28) + "px");
+                })
+              .on("mouseout", function(d) {
+                barTooltip.transition()
+                  .style("opacity", 0);
+              });
             
           // add SVG 'text' elements for labels
           container.selectAll('text')
