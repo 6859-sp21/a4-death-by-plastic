@@ -27,14 +27,15 @@
       <div class="primary-visual">
         <div id="line-chart">
           <p id="fate-desc">
-            Ever since the invention of the first plastic, Bakelite, in 1907, the world has developed a love for plastics that’s grown every year since. 
-            However, it wasn’t until 1950 onward that global plastic production skyrocketed as production increased nearly 200 fold over the next 65 years. 
+            Ever since the invention of the first plastic, Bakelite, in 1907, the world has developed a love for plastics that’s grown every year. 
+            However, it wasn’t until 1950 onward that global plastic production skyrocketed and increased nearly 200 fold over the next 65 years. 
           </p>
         </div>
         <div class="carousel-container">
-          <div class="context-container">
+          <div>
             <p id="value-total"></p>
             <p id="value-time"></p>
+            <p id="hover-tip">(Hover for more information)</p>
           </div>
           <div id="carousel-viz" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
@@ -98,14 +99,18 @@
           </p>
         </div>
       </div>
-      <div class="context-container">
-        <p>
-          The Ellen MacArthur Foundation estimates that there will be more plastics than fish by weight in the oceans by 2050 given our current rate of production. 
-          While there hasn’t been extensive evidence showing adverse human health effects of ingesting plastics, we should still be wary of increases in the 
-          consumption of substances whose toxic effects could one day reveal itself. If nothing is done to curb global plastic production, plastic sinks in the oceans and 
-          landfills will only get bigger until they aren’t issues that we can simply overlook. 
-          Finally, this unfettered plastic production contributes to the larger scale climate crisis, whose effects could be catastrophic.
-        </p>
+      <div id="impact-text">
+        <div class="context-container">
+          <p>
+            The Ellen MacArthur Foundation estimates that <b>there will be more plastics than fish by weight in the oceans by 2050</b>  given our current rate of production. 
+            While there hasn’t been extensive evidence showing adverse human health effects of ingesting plastics, we should still be wary of increased plastic consumption
+            as we continue to explore the potential ramifications. 
+            Furthermore, if nothing is done to curb global plastic production, plastic sinks in the oceans and 
+            landfills will only get bigger until they aren’t issues that we can simply overlook. 
+            This unfettered plastic production also contributes to the larger scale climate crisis, which has been shown to have catastrophic effects on human and animal life.
+          </p>
+          <h4><b>We must act now to curb our plastic obsession before the world crumbles under the weight of plastic</b></h4>
+        </div>
       </div>
       <div>
         <br />
@@ -238,6 +243,11 @@
             .on("mouseover", function(event,d) {
               carouselTooltip.transition()
                 .style("opacity", 1);
+              carouselTooltip
+                .style("left", `${event.pageX}px`)
+                .style("top", `${event.pageY - 28}px`);
+            })
+            .on("mousemove", function(event,d) {
               carouselTooltip
                 .style("left", `${event.pageX}px`)
                 .style("top", `${event.pageY - 28}px`);
@@ -493,7 +503,10 @@
               .on('mouseout', mouseout);
 
             // Extra larger circle that appears when hovered over
-            const focus = svg.append('circle');
+            const focus = svg.append('circle')
+                .on('mouseover', mouseover)
+                .on('mousemove', mousemove)
+                .on('mouseout', mouseout);
 
             let selectedData = null;
 
@@ -633,6 +646,11 @@
                   fateTooltip.transition()
                     .style("opacity", .95);
                   fateTooltip.html(genFateHTML(fateDataFiltered[d.index].Entity,d.value))
+                    .style("left", (event.pageX) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+                  })
+                .on("mousemove", function(event,d) {
+                  fateTooltip
                     .style("left", (event.pageX) + "px")
                     .style("top", (event.pageY - 28) + "px");
                   })

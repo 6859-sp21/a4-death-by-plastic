@@ -23,10 +23,13 @@ body {
     justify-content: center;
     flex-wrap: wrap;
 }
-.primary-visual, .secondary-visual, .tertiary-visual {
+.secondary-visual, .tertiary-visual {
     display: flex;
     /* align-items: center; */
     margin-bottom: 50px;
+}
+.primary-visual {
+    display: flex;
 }
 .secondary-visual, .tertiary-visual {
     align-items: center;
@@ -34,22 +37,26 @@ body {
 #fate-desc {
     padding-left: 100px;
 }
-#ocean-desc {
-
+#hover-tip {
+    font-size: 14px;
 }
 p {
     font-family: 'Poppins';
-    font-size: larger;
+    font-size: large;
     color: rgb(97, 97, 97);
 }
 h1, h2, h3, h4 {
     font-family: 'Montserrat';
     margin-bottom: 2rem;
-    color: rgb(97, 97, 97);
+    /* color: rgb(97, 97, 97); */
+    color: steelblue;
 }
 .slide {
     /* width: 50%; */
     max-width: 700px;
+}
+a, b {
+    color: steelblue;
 }
 .slider-container {
     display: flex;
@@ -58,8 +65,6 @@ h1, h2, h3, h4 {
     margin-bottom: 30px;
     margin-left: 50px;
 }
-#title {
-}
 .carousel-container {
     display: flex;
     justify-content: center;
@@ -67,8 +72,7 @@ h1, h2, h3, h4 {
     min-width: 700px;
     max-width: 700px;
     max-height: 520px;
-    margin: 0 50px;
-
+    margin: 0px 50px 0px 50px;
 }
 .context-container {
     /* width: 100%; */
@@ -76,12 +80,18 @@ h1, h2, h3, h4 {
     margin-bottom: 20px;
     margin: 0 50px;
 }
+
 #ocean-context {
     padding-right: 100px;
 }
 #line-chart {
     width: 700px;
     margin: 0 50px;
+}
+#impact-text {
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 .axis, text {
     font-size: 14px;
@@ -98,10 +108,6 @@ h1, h2, h3, h4 {
     margin: 0 50px;
     width: 700px;
 }
-#chart {
-    /* padding-left: 140px; */
-}
-
 div.tooltip {
     position: absolute;
     text-align: center;
