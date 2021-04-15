@@ -1,3 +1,7 @@
+body {
+    display: flex;
+    justify-content: center;
+}
 .body-container {
     display: flex;
     justify-content: center;
@@ -5,29 +9,71 @@
     align-items: center;
     text-align: center;
     margin-top: 5rem;
+    max-width: 2000px;
 }
-#chart, h2 {
-    width: 100%;
+.title-image {
+    margin-bottom: 80px;
+    width:1200px;
+    height:800px;
+    margin-left: 150px;
+}
+.title-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.primary-visual, .secondary-visual, .tertiary-visual {
+    display: flex;
+    /* align-items: center; */
+    margin-bottom: 50px;
+}
+.secondary-visual, .tertiary-visual {
+    align-items: center;
+}
+#text-desc, h4 {
+    margin-left: 100px;
+}
+p {
+    font-family: 'Poppins';
+    font-size: larger;
+    color: rgb(97, 97, 97);
+}
+h1, h2, h3, h4 {
+    font-family: 'Montserrat';
+    margin-bottom: 2rem;
+    color: rgb(97, 97, 97);
 }
 .slide {
     /* width: 50%; */
-    max-width: 600px;
+    max-width: 700px;
+}
+.slider-container {
+    display: flex;
+    flex-flow: wrap;
+    align-items: center;
+    margin-bottom: 30px;
+    margin-left: 50px;
 }
 #title {
 }
-.slider-container {
-    /* position: fixed; 
-    top: 20%;
-    left: 50%;
-    margin-left: -450px; 
-    background-color: white;
-    box-shadow: 4px 3px 3px silver; */
+.carousel-container {
+    display: flex;
+    justify-content: center;
+    flex-flow: wrap;
+    max-width: 700px;
+    max-height: 520px;
+    margin: 0 50px;
+
 }
 .context-container {
     width: 100%;
+    max-width: 800px;
+    margin-bottom: 20px;
+    margin: 0 50px;
 }
 #line-chart {
     width: 800px;
+    margin: 0 50px;
 }
 .axis, text {
     font-size: 14px;
@@ -38,6 +84,14 @@
 /* Carousel Transition Speed */
 .carousel-inner .carousel-item {
     transition: transform .5s ease;
+}
+
+#fate-chart, #chart {
+    margin: 0 50px;
+    width: 700px;
+}
+#chart {
+    padding-left: 140px;
 }
 
 div.tooltip {
@@ -53,7 +107,7 @@ div.tooltip {
     pointer-events: none;
   }
 
- .fate-tooltip {
+.fate-tooltip {
     position: absolute;
     text-align: center;
     padding: 10px;
@@ -63,9 +117,9 @@ div.tooltip {
     border-color: black;
     border-radius: 8px;
     pointer-events: none;
-  }
+}
 
-  .carousel-tooltip {
+.carousel-tooltip {
     position: absolute;
     text-align: center;
     padding: 10px;
@@ -75,4 +129,4 @@ div.tooltip {
     border-color: black;
     border-radius: 8px;
     pointer-events: none;
-  }
+}
