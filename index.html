@@ -221,8 +221,8 @@
           // const globalData = lineData.filter(d => d.Entity === entity);
 
           let selected = [
-            microData.filter(d => d.Year === minYear.toString())[0],
-            macroData.filter(d => d.Year === minYear.toString())[0],
+            microData.filter(d => d.Year === "2015")[0],
+            macroData.filter(d => d.Year === "2015")[0],
             ];
 
 
@@ -233,14 +233,13 @@
           const categories = ["Microplastics", "Macroplastics"];
           const fontSize = 16;
           
-          
           //Carousel Tooltip
           const genCarouselHTML = function(index) {
-              return `<div class="card" style="width: 18rem;">
+              return  `<div class="card" style="width: 18rem;">
                         <img class="card-img-top" style="max-height:300px;" src="img/${monuments[index].img}" alt="Card image cap">
                         <div class="card-body">
-                          <h5 class="card-title">${monuments[index].name}</h5>
-                          <h6 class="card-subtitle mb-2 text-muted">${monuments[index].weight}</h6>
+                          <h5 style="font-family:'Montserrat'; color:steelblue;">${monuments[index].name}</h5>
+                          <h6 style="font-family:'Montserrat'; font-weight:bold;" class="card-subtitle text-muted">${monuments[index].weight}</h6>
                         </div>
                       </div>`;
           };
@@ -273,7 +272,6 @@
           const lineMargin =  {top: 50, right: 30, bottom: 50, left: 100},
                 lineWidth = 700 - lineMargin.left - lineMargin.right,
                 lineHeight = 500 - lineMargin.top - lineMargin.bottom;
-
 
           colorScale = d3.scaleOrdinal(d3.schemeGreys[3]).domain(categories); 
 
@@ -337,8 +335,6 @@
             .attr("height", lineHeight + lineMargin.top + lineMargin.bottom )
             .append("g")
             .attr("transform","translate(" + lineMargin.left + "," + lineMargin.top + ")");
-
-
 
           let xLineScale = svg.append("g");
           xLineScale
@@ -454,6 +450,99 @@
                       </div>`;
           };
 
+          // FATE CHART
+          fateDataFiltered = fateData.filter(d => d.Year === "2015");
+          fateSVG
+            .selectAll("arc")
+            .data(fatePie(fateDataFiltered.map(d => d["Estimated historic plastic fate"])))
+            .join("path")
+              .attr("stroke", "white")
+              .style("stroke-width", "1px")
+              .attr("fill", (d,i) => fateColor(fateDataFiltered[i].Entity))
+              .attr("d", fateArcGenerator)
+              .on("mouseover", function(event,d) {
+                fateTooltip.transition()
+                  .style("opacity", 1);
+                fateTooltip.html(genFateHTML(fateDataFiltered[d.index].Entity,d.value))
+                  .style("left", (event.pageX) + "px")
+                  .style("top", (event.pageY - 28) + "px");
+                })
+              .on("mousemove", function(event,d) {
+                fateTooltip
+                  .style("left", (event.pageX) + "px")
+                  .style("top", (event.pageY - 28) + "px");
+                })
+              .on("mouseout", function(d) {
+                fateTooltip.transition()
+                  .style("opacity", 0);
+                });
+
+          fateSVG
+            .selectAll("arc")
+            .data(fatePie(fateDataFiltered.map(d => d["Estimated historic plastic fate"])))
+            .join('text')
+              .text((d,i) => genFateText(fateDataFiltered[i]))
+              .attr("transform", d => "translate(" + fateArcGenerator.centroid(d) + ")")
+              .style("text-anchor", "middle")
+              .style("fill", "white")
+              .style("font-size", 17);
+
+          // add SVG 'rect' elements for bars
+          container.selectAll('rect')
+            .data(selected)
+            .join('rect')
+              .attr('x', 0)
+              .attr('y', 0)
+              .attr('width', d => xMargin(d.Value) - xMargin(0))
+              .attr('height', yMargin.bandwidth())
+              .style('fill', (d,i) => colorScale(categories[i]))
+              .style('stroke', 'white')
+              .attr('transform', (d,i) => `translate(${margin.left}, ${yMargin(categories[i])})`);
+            
+          // add SVG 'text' elements for labels
+          container.selectAll('text')
+            .data(selected)
+            .join('text')
+              .attr('x', d => 5 + xMargin(d.Value))
+              .attr('y', (d, i) => yMargin.bandwidth()*(2-i))
+              .attr('dy', '-1em')
+              .attr('fill', 'black')
+              .style('font-size', 'small')
+              .text(d => numberWithCommas(d.Value))
+
+          // add title
+          container.append('g')
+            .append('text')
+              .attr('text-anchor', 'middle')
+              .attr('fill', 'black')
+              .style('font-size', '18px')
+              .attr('x', width/2)
+              .attr('y', margin.top)
+              .attr('dy', '-.5em')
+              .text('Plastics on Ocean Surface (2015)');
+            
+          // add x-axis
+          container.append('g')
+            .attr('transform', `translate(0, ${height - margin.bottom})`)
+            .call(d3.axisBottom(xMargin).ticks(5))
+            .append('text')
+              .attr('text-anchor', 'middle')
+              .attr('fill', 'black')
+              .attr('font-weight', 'bold')
+              .attr('x', width/2)
+              .attr('y', 45)
+              .text('Weight (tonnes)');
+            
+          // add y-axis with rotated labels
+          container.append('g')
+            .attr('transform', `translate(${margin.left}, 0)`)
+            .call(d3.axisLeft(yMargin))
+            .selectAll("text")
+              .attr("dx", "1em")
+              .attr("dy", "-1em")
+              .style("text-anchor", "middle")
+              .attr("transform", "rotate(-90)");
+
           // This allows to find the closest X index of the mouse:
           const bisect = d3.bisector(function(d) { return new Date(d.Year, 0); }).center;
 
@@ -499,16 +588,22 @@
             .call(yLineAxis);
 
             curve
-                .datum(newData)
-                .attr("d", d3.line()
+              .datum(newData)
+              .transition()
+              .duration(150)
+              .ease(d3.easeLinear)
+              .attr("d", d3.line()
                 .x(function(d) { return x(new Date(d.Year, 0)) })
                 // .y(y(0))
                 .y(function(d) { return y(d.Value) })
-                )
+              )
             
             svg.selectAll("circle")
               .data(newData)
               .join("circle")
+                .transition()
+                .duration(150)
+                .ease(d3.easeLinear)
                 .attr("fill", "black")
                 .attr("stroke", "white")
                 .attr("cx", function(d) { return x(new Date(d.Year, 0)) })
@@ -523,21 +618,6 @@
           /////////////////////////////////////////
           ///// Add y-axis hover tooltips /////////
           /////////////////////////////////////////
-
-            // // Create the text that accompanies your cursor
-            // var focusTextYear = svg
-            //   .append('g')
-            //   .append('text')
-            //   .style("opacity", 0)
-            //   .style('font-size', 70)
-            //   .style('font-weight', 700)
-              
-            // var focusTextValue = svg
-            //   .append('g')
-            //   .append('text')
-            //   .style("opacity", 0)
-            //   .style('font-size', 30)
-            //   .style('fill', 'steelblue')
 
             // Create a rect on top of the svg area: this rectangle recovers mouse position
             svg.selectAll('rect').remove();
@@ -622,109 +702,6 @@
 
             d3.select('p#value-total').html("In " + val + ", the world produced " + "<b>" + numberWithCommas(maxValue) + "</b>" + " tonnes of plastic in a single year");
             d3.select('p#value-time').html("That's more than the mass of " + "<b>" + sliderDescriptions[sliderIndex]+ "</b>");
-
-            // add SVG 'rect' elements for bars
-            container.selectAll('rect')
-              .data(selected)
-              .join('rect')
-                .transition()
-                .duration(150)
-                .ease(d3.easeLinear)
-                .attr('x', 0)
-                .attr('y', 0)
-                .attr('width', d => xMargin(d.Value) - xMargin(0))
-                .attr('height', yMargin.bandwidth())
-                .style('fill', (d,i) => colorScale(categories[i]))
-                .style('stroke', 'white')
-                .attr('transform', (d,i) => `translate(${margin.left}, ${yMargin(categories[i])})`);
-            
-            // add SVG 'text' elements for labels
-            container.selectAll('text')
-              .data(selected)
-              .join('text')
-                .transition()
-                .duration(150)
-                .ease(d3.easeLinear)
-                .attr('x', d => 5 + xMargin(d.Value))
-                .attr('y', (d, i) => yMargin.bandwidth()*(2-i))
-                .attr('dy', '-1em')
-                .attr('fill', 'black')
-                .style('font-size', 'small')
-                .text(d => numberWithCommas(d.Value))
-
-            container.selectAll('g').remove();
-
-            // add title
-            container.append('g')
-              .append('text')
-                .attr('text-anchor', 'middle')
-                .attr('fill', 'black')
-                .style('font-size', '18px')
-                .attr('x', width/2)
-                .attr('y', margin.top)
-                .attr('dy', '-.5em')
-                .text('Plastics on Ocean Surface');
-            
-            // add x-axis
-            container.append('g')
-              .attr('transform', `translate(0, ${height - margin.bottom})`)
-              .call(d3.axisBottom(xMargin).ticks(5))
-              .append('text')
-                .attr('text-anchor', 'middle')
-                .attr('fill', 'black')
-                .attr('font-weight', 'bold')
-                .attr('x', width/2)
-                .attr('y', 45)
-                .text('Weight (tonnes)');
-            
-            // add y-axis with rotated labels
-            container.append('g')
-              .attr('transform', `translate(${margin.left}, 0)`)
-              .call(d3.axisLeft(yMargin))
-              .selectAll("text")
-                .attr("dx", "1em")
-                .attr("dy", "-1em")
-                .style("text-anchor", "middle")
-                .attr("transform", "rotate(-90)");
-
-            // FATE CHART
-            fateDataFiltered = fateData.filter(d => d.Year === val.toString());
-            fateSVG
-              .selectAll("arc")
-              .data(fatePie(fateDataFiltered.map(d => d["Estimated historic plastic fate"])))
-              .join("path")
-                .attr("stroke", "white")
-                .style("stroke-width", "1px")
-                .attr("fill", (d,i) => fateColor(fateDataFiltered[i].Entity))
-                .attr("d", fateArcGenerator)
-                .on("mouseover", function(event,d) {
-                  fateTooltip.transition()
-                    .style("opacity", 1);
-                  fateTooltip.html(genFateHTML(fateDataFiltered[d.index].Entity,d.value))
-                    .style("left", (event.pageX) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-                  })
-                .on("mousemove", function(event,d) {
-                  fateTooltip
-                    .style("left", (event.pageX) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-                  })
-                .on("mouseout", function(d) {
-                  fateTooltip.transition()
-                    .style("opacity", 0);
-                  });
-
-            fateSVG
-              .selectAll("arc")
-              .data(fatePie(fateDataFiltered.map(d => d["Estimated historic plastic fate"])))
-              .join('text')
-                .text((d,i) => genFateText(fateDataFiltered[i]))
-                .attr("transform", d => "translate(" + fateArcGenerator.centroid(d) + ")")
-                .style("text-anchor", "middle")
-                .style("fill", "white")
-                .style("font-size", 17);
-
-            fateSvgText.text(val);
           };
 
           update(1950);
@@ -735,8 +712,6 @@
             else return index;
           }
 
-
-          
           const sliderTime = d3
             .sliderBottom()
             .min(minYear)
