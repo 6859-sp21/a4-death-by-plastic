@@ -109,7 +109,7 @@
             landfills will only get bigger until they aren’t issues that we can simply overlook. 
             This unfettered plastic production also contributes to the larger scale climate crisis, which has been shown to have catastrophic effects on human and animal life.
           </p>
-          <h4><b>We must act now to curb our plastic obsession before the world crumbles under it's weight!</b></h4>
+          <h4><b>We must act now to curb our plastic obsession before the world crumbles under its weight!</b></h4>
         </div>
       </div>
       <div class="source-container">
@@ -224,6 +224,8 @@
             macroData.filter(d => d.Year === "2015")[0],
           ];
 
+          const grays = d3.schemeGreys[6].splice(2,3).reverse();
+
           const height = 350;
           const width = 550;
           const margin = ({top: 40, right: 40, bottom: 40, left: 25});
@@ -270,7 +272,7 @@
                 lineWidth = 700 - lineMargin.left - lineMargin.right,
                 lineHeight = 500 - lineMargin.top - lineMargin.bottom;
 
-          colorScale = d3.scaleOrdinal(d3.schemeGreys[3]).domain(categories); 
+          colorScale = d3.scaleOrdinal(grays).domain(categories); 
 
           xScale = d3.scaleLinear()
             .domain([minWeight, maxWeight])
@@ -405,7 +407,7 @@
 
           const fateColor = d3.scaleOrdinal()
             .domain(["Discarded", "Incinerated", "Recycled"])
-            .range(d3.schemeGreys[6].splice(2,3).reverse());
+            .range(grays);
 
           let fateDataFiltered = fateData.filter(d => d.Year === "2000");
           
