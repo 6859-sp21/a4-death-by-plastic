@@ -1,0 +1,136 @@
+body {
+    display: flex;
+    justify-content: center;
+}
+.body-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    text-align: center;
+    margin-top: 5rem;
+    max-width: 2000px;
+}
+.title-image {
+    margin-bottom: 80px;
+    max-width: 60%;
+    height: auto;
+    width: auto; /* ie8 */
+    margin-left: 150px;
+}
+.title-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.secondary-visual, .tertiary-visual {
+    display: flex;
+    /* align-items: center; */
+    margin-bottom: 50px;
+}
+.primary-visual {
+    display: flex;
+}
+.secondary-visual, .tertiary-visual {
+    align-items: center;
+}
+#fate-desc {
+    padding-left: 100px;
+}
+#hover-tip {
+    font-size: 14px;
+}
+p {
+    font-family: 'Poppins';
+    font-size: large;
+    color: rgb(97, 97, 97);
+}
+h1, h2, h3, h4 {
+    font-family: 'Montserrat';
+    margin-bottom: 2rem;
+    /* color: rgb(97, 97, 97); */
+    color: steelblue;
+}
+.slide {
+    /* width: 50%; */
+    max-width: 700px;
+}
+a, b {
+    color: steelblue;
+}
+.slider-container {
+    display: flex;
+    flex-flow: wrap;
+    align-items: center;
+    margin-bottom: 30px;
+    margin-left: 50px;
+}
+.carousel-container {
+    display: flex;
+    justify-content: center;
+    flex-flow: wrap;
+    min-width: 700px;
+    max-width: 700px;
+    max-height: 520px;
+    margin: 0px 50px 0px 50px;
+}
+.context-container {
+    /* width: 100%; */
+    max-width: 600px;
+    margin-bottom: 20px;
+    margin: 0 50px;
+}
+
+#ocean-context {
+    padding-right: 100px;
+}
+#line-chart {
+    width: 700px;
+    margin: 0 50px;
+}
+#impact-text {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.axis, text {
+    font-size: 14px;
+}
+.handle {
+    outline: none;
+}
+/* Carousel Transition Speed */
+.carousel-inner .carousel-item {
+    transition: transform .5s ease;
+}
+
+#fate-chart, #chart {
+    margin: 0 50px;
+    width: 700px;
+}
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 60px;
+    height: 28px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+  }
+
+.fate-tooltip {
+    position: absolute;
+    pointer-events: none;
+}
+
+.carousel-tooltip {
+    position: absolute;
+    pointer-events: none;
+}
+
+.source-container {
+    margin-bottom: 50px;
+}

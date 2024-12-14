@@ -1,0 +1,792 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    
+    <div class="body-container">
+      <img class="title-image" src="img/trash_title.png" alt="Title" >
+      <div class="title-container">
+        <!-- <h1 id="title">Crumbling Under the Weight of Plastic</h1> -->
+        <div class="context-container">
+
+        </div>
+        <!-- <h2>Year</h2> -->
+
+      </div>
+      
+      <div class="primary-visual">
+        <div id="line-chart">
+          <p id="fate-desc">
+            Ever since the invention of the first plastic, Bakelite, in 1907, the world has developed a love for plastics that’s grown every year. 
+            However, it wasn’t until 1950 onward that global plastic production skyrocketed and increased nearly 200 fold over the next 65 years. 
+          </p>
+        </div>
+        <div class="carousel-container">
+          <div>
+            <p id="value-total"></p>
+            <p id="value-time"></p>
+            <p id="hover-tip">(Hover for more information)</p>
+          </div>
+          <div id="carousel-viz" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img class="d-block w-100" src="img/eiffel_tower.png" alt="First slide">
+              </div>
+              <div class="carousel-item">
+                <img class="d-block w-100" src="img/washington_mon.png" alt="Second slide">
+              </div>
+              <div class="carousel-item">
+                <img class="d-block w-100" src="img/crane_vessel.png" alt="Fourth slide">
+              </div>
+              <div class="carousel-item">
+                <img class="d-block w-100" src="img/shanghai_tower.png" alt="Fifth slide">
+              </div>
+              <div class="carousel-item">
+                <img class="d-block w-100" src="img/burj_khalifa.png" alt="Sixth slide">
+              </div>
+              <div class="carousel-item">
+                <img class="d-block w-100" src="img/giza.png" alt="Seventh slide">
+              </div>
+              <div class="carousel-item">
+                <img class="d-block w-100" src="img/gorges_dam.png" alt="Eighth slide">
+              </div>
+              <div class="carousel-item">
+                <img class="d-block w-100" src="img/great_wall.png" alt="Ninth slide">
+              </div>
+              <!--add more images here-->
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="slider-container">
+        <button id="play-button">Play</button>
+        <div class="slider-details">
+          <h3 style="margin-bottom: 10px;">Adjust the Year</h3>
+          <div onclick="pauseAnimation()" id="slider-time"></div>
+        </div>
+      </div>
+      <div class="secondary-visual">
+        <div class="context-container">
+          <h4 id="fate-desc">The Fate of Plastics and The Myth of Recycling</h4>
+          <p id="fate-desc">Annual plastic production is clearly showing no signs of slowing down. Contributing to this exponential growth is the myth of recycling. 
+            Before 1980, recycling and incineration was negligible as most plastics were discarded (sent to landfills). Since 1987, there has been a 
+            gradual increase in recycling rates, but the overwhelming majority of plastics continue to be incinerated or recycled. 
+            In 2015, an estimate of only 20% of global plastic waste was recycled.
+          </p>
+        </div>
+        <div id="fate-chart"></div>
+      </div>
+
+      <div class="tertiary-visual">
+        <div id="chart"></div>
+        <div id="ocean-context" class="context-container">
+          <h4>Consequences on the Ocean</h4>
+          <p id="ocean-desc">The discarded plastic does not decompose, destined to end up in some different region of the environment, such as the oceans. 
+            These plastics that enter the ocean take the form of microplastics and macroplastics. Microplastics are buoyant plastic materials smaller than 0.5 centimeters 
+            in diameter (half the width of your pinky), while macroplastics are those greater than 0.5 centimeters in diameter. 
+            At least 233 marine species have been documented to ingest these microplastics, eventually ending up in our food supply.
+          </p>
+        </div>
+      </div>
+      <div id="impact-text">
+        <div style="max-width: 1200px;">
+          <p>
+            The Ellen MacArthur Foundation estimates that <b>there will be more plastics than fish by weight in the oceans by 2050</b>  given our current rate of production. 
+            While there hasn’t been extensive evidence showing adverse human health effects of ingesting plastics, we should still be wary of increased plastic consumption
+            as we continue to explore the potential ramifications. 
+            Furthermore, if nothing is done to curb global plastic production, plastic sinks in the oceans and 
+            landfills will only get bigger until they aren’t issues that we can simply overlook. 
+            This unfettered plastic production also contributes to the larger scale climate crisis, which has been shown to have catastrophic effects on human and animal life.
+          </p>
+          <h4><a href="https://www.nrdc.org/stories/10-ways-reduce-plastic-pollution"><b>We must act now to curb our plastic obsession before the world crumbles under its weight.</b></a> </h4>
+        </div>
+      </div>
+      <div class="source-container">
+        <h5>Sources</h5>
+        <a href="https://ourworldindata.org/plastic-pollution#how-much-plastic-does-the-world-produce">Our World in Data</a>
+        <br />
+        <a href="https://advances.sciencemag.org/content/3/7/e1700782">Production, use, and fate of all plastics ever made</a>
+        <br />
+        <a href="https://www.nature.com/articles/s41598-019-49413-5">A global mass budget for positively buoyant macroplastic debris in the ocean</a>
+        <br />
+        <a href="https://www.newser.com/story/259238/the-10-heaviest-objects-on-earth.html">Heaviest Object on Earth Weighs 116B Pounds</a>
+        <br />
+      </div>
+
+    </div>
+    <script>
+      const githubDatasetsURL = "https://raw.githubusercontent.com/6859-sp21/a4-drowning-in-plastic/main/datasets/";
+
+      $('.carousel').carousel({
+        interval: false,
+      });
+      const sliderDescriptions = [
+            "198 Eiffel Towers",
+            "109 Washington Monuments",
+            "96 Pioneering Spirit Crane Vessels",
+            "83 Shanghai Towers",
+            "55 Burj Khalifas",
+            "39 Pyramids of Khufu",
+            "33 Three Gorges Dams",
+            "7 Great Walls of China"
+          ]
+      let sliderIndex = 0;
+      var timer = 0;
+      //Source: https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
+      function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      function pauseAnimation() {
+        moving = false;
+        if (timer) {
+          clearInterval(timer);
+        }
+        // timer = 0;
+        d3.select(document.getElementById('play-button')).text("Play");
+      }
+
+      const globalData = []
+      d3.csv(githubDatasetsURL + "global-plastics-production-edit.csv", function(data) {
+        globalData.push(data)
+      });
+
+      const fateData = [];
+      d3.csv(githubDatasetsURL + "global-plastic-fate.csv", function(data) {
+        fateData.push(data)
+      });
+
+      const monuments = [
+        {"name": "Eiffel Tower",
+         "weight": "10,100 tonnes </br> (22,300,000 lbs)",
+         "img": "eiffel-tower-tip.jpg"},
+        {"name": "Washington Monument",
+         "weight": "73,600 tonnes </br> (162,000,000 lbs)",
+         "img": "washington-monument-tip.jpg"},
+        {"name": "Pioneering Spirit Crane Vessel",
+         "weight": "365,000 tonnes </br> (805,000,000 lbs)",
+         "img": "pioneering-spirit-tip.jpg"},
+        {"name": "Shanghai Tower",
+         "weight": "850,000 tonnes </br> (1,900,000,000 lbs)",
+         "img": "shanghai-tower-tip.jpg"},
+        {"name": "Burj Khalifa",
+         "weight": "2,200,000 tonnes </br> (4,900,000,000 lbs)",
+         "img": "burj-khalifa-tip.jpg"},
+        {"name": "Pyramids of Khufu",
+         "weight": "5,400,000 tonnes </br> (12,000,000,000 lbs)",
+         "img": "pyramids-tip.jpg"},
+        {"name": "Three Gorges Dam",
+         "weight": "9,400,000 tonnes </br> (20,800,000,000 lbs)",
+         "img": "dam-tip.jpeg"},
+        {"name": "Great Wall of China",
+         "weight": "52,600,000 tonnes </br> (116,000,000,000 lbs)",
+         "img": "wall-tip.jpg"},
+      ];
+
+      const fateImageSrcs = {
+        "Discarded": "discarded.jpg",
+        "Recycled": "recycled.jpg",
+        "Incinerated": "incinerated.jpg",
+      };
+
+      const fateDescriptions = {
+        "Discarded": "Most plastics end up in landfills where it may take up to 500 years to decompose, and potentially leak pollutants into the soil and water. Even plastics that people believe they are recycling can end up here.",
+        "Recycled": "Mechanical recycling involves washing, grinding, and melting the plastics. Chemical recycling breaks the plastics down into monomers. These can then be used in products such as bottles, trash bags, or kitchenware.",
+        "Incinerated": "Burning plastic and other wastes releases dangerous substances such as heavy metals, persistent organic pollutants (POPs), and other toxins into the air.",
+      };
+
+    d3.csv(githubDatasetsURL + "microplastics-in-ocean.csv").then(microplastics => {
+      d3.csv( githubDatasetsURL + "macroplastics-in-ocean.csv").then(macroplastics => {  
+          const minYear = 1950; // inclusive
+          const maxYear = 2015; // inclusive
+          const entity = "Emissions growth to 2050";
+          const microData = microplastics.filter(d => d.Entity === entity && d.Year >= minYear && d.Year <= maxYear);
+          const macroData = macroplastics.filter(d => d.Entity === entity && d.Year >= minYear && d.Year <= maxYear);
+          const minWeight = 0;
+          const maxWeight = Math.round(d3.max(
+            microData.concat(macroData), d => parseInt(d.Value)
+          )/1000000)*1000000; // max weight rounded to nearest million
+          // const globalData = lineData.filter(d => d.Entity === entity);
+
+          let selected = [
+            microData.filter(d => d.Year === "2015")[0],
+            macroData.filter(d => d.Year === "2015")[0],
+          ];
+
+          const grays = d3.schemeGreys[6].splice(2,3).reverse();
+
+          const height = 350;
+          const width = 550;
+          const margin = ({top: 40, right: 40, bottom: 40, left: 25});
+          const categories = ["Microplastics", "Macroplastics"];
+          const fontSize = 16;
+          
+          const genCardHTML = function(src, title, subtitle, paragraph = " ") {
+              return `<div class="card" style="width: 18rem;">
+                        <img class="card-img-top" style="max-height:300px;" src="img/${src}" alt="Card image cap">
+                        <div class="card-body">
+                          <h5 style="font-family:'Montserrat'; color:steelblue;">${title}</h5>
+                          <h6 style="font-family:'Montserrat'; font-weight:bold;" class="card-subtitle text-muted">${subtitle}</h6>
+                          <p class="mb-0" style="font-size:14px">${paragraph}</p>
+                        </div>
+                      </div>`;
+          };
+
+          let carouselTooltip = d3.select("body").append("div")
+            .attr("class", "carousel-tooltip")
+            .attr("id", "carouselTooltip")
+            .style("opacity", 0)
+            .html(genCardHTML(monuments[0].img, monuments[0].name, monuments[0].weight));
+
+          d3.select("#carousel-viz")
+            .on("mouseover", function(event,d) {
+              carouselTooltip.transition()
+                .style("opacity", 1);
+              carouselTooltip
+                .style("left", `${event.pageX}px`)
+                .style("top", `${event.pageY - 28}px`);
+            })
+            .on("mousemove", function(event,d) {
+              carouselTooltip
+                .style("left", `${event.pageX}px`)
+                .style("top", `${event.pageY - 28}px`);
+            })
+            .on("mouseout", function(d) {
+              carouselTooltip.transition()
+                .style("opacity", 0);
+              });
+
+          // Line chart
+          const lineMargin =  {top: 50, right: 30, bottom: 50, left: 100},
+                lineWidth = 700 - lineMargin.left - lineMargin.right,
+                lineHeight = 500 - lineMargin.top - lineMargin.bottom;
+
+          colorScale = d3.scaleOrdinal(grays).domain(categories); 
+
+          xScale = d3.scaleLinear()
+            .domain([minWeight, maxWeight])
+            .range([0, width]);
+          xMargin = xScale.copy().range([margin.left, width - margin.right])
+          
+
+          yScale = d3.scaleBand()
+            .domain(categories)
+            .range([height, 0]);
+          yMargin = yScale.copy().range([height - margin.bottom, margin.top])
+
+          function updateSlider(val) {
+              const newIndex = calculateCarousel(val);
+              sliderIndex = newIndex;
+              d3.select('p#value-total').text("In " + val + ", the world produced " + numberWithCommas(maxValue) + " tonnes of plastic in a single year");
+              d3.select('p#value-time').text("That's more than the mass of " + sliderDescriptions[sliderIndex]);
+              carouselTooltip.html(genCardHTML(monuments[sliderIndex].img, monuments[sliderIndex].name, monuments[sliderIndex].weight));
+              $('.carousel').carousel(newIndex); // rotate carousel to index correlated to nearest decade(floor)
+          }
+
+          let moving = false;
+          let currentValue = minYear;
+          let targetValue = maxYear;
+
+
+          //////////////////////////////////////////////////
+          /////////////// Line chart axes /////////////
+          //////////////////////////////////////////////////
+
+          // Add X axis for line chart --> it is a date format
+          let x = d3.scaleTime()
+              .domain([new Date(minYear, 0), new Date(maxYear, 0)])
+              .range([ 0, lineWidth ]);
+          var xLineAxis = d3.axisBottom(x).tickFormat(d3.timeFormat("%Y")).ticks(5);
+
+          // Add Y axis
+          let y = d3.scaleLinear()
+            .domain([0, d3.max(globalData, function(d) { return d.Value; })])
+            .range([ lineHeight, 0 ]);
+          var yLineAxis = d3.axisLeft(y).ticks(6);
+
+          const container = d3.create('svg')
+          .attr('width', width)
+          .attr('height', height + margin.top)
+          
+          var div = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+          
+          // append the svg object to the body of the page
+          const svg = d3.select("#line-chart")
+            .append("svg")
+            .attr("width", lineWidth + lineMargin.left + lineMargin.right )
+            .attr("height", lineHeight + lineMargin.top + lineMargin.bottom )
+            .append("g")
+            .attr("transform","translate(" + lineMargin.left + "," + lineMargin.top + ")");
+
+          let xLineScale = svg.append("g");
+          xLineScale
+            .attr("transform", "translate(0," + lineHeight + ")")
+            .style("font-size", "14px")
+            .call(xLineAxis)
+            .append('text')
+                  .attr('text-anchor', 'middle')
+                  .attr('fill', 'black')
+                  .attr('font-weight', 'bold')
+                  .attr('x', lineWidth/2)
+                  .attr('y', 45)
+                  .text('Year');
+            
+
+          let yLineScale = svg.append("g");
+          yLineScale
+            .style("font-size", "14px")
+            .call(yLineAxis)
+            .append('text')
+                  .attr('text-anchor', 'middle')
+                  .attr('fill', 'black')
+                  .attr('font-weight', 'bold')
+                  .attr('x', 0 - lineMargin.right)
+                  .attr('y', 0 - 20)
+                  .text('Tonnes');;
+
+          // Add the line
+          const curve = svg.append("path")
+              .datum(globalData)
+              .attr("fill", "none")
+              .attr("stroke", "black")
+              .attr("stroke-width", 1.5)
+              .attr("d", d3.line()
+                .x(function(d) { return x(new Date(d.Year, 0)) })
+                // .y0(y(0))
+                .y(function(d) { return y(d.Value) })
+                )
+
+          svg.selectAll("circle")
+            .data(globalData)
+            .join("circle")
+            .attr("fill", "black")
+            .attr("stroke", "white")
+            .attr("cx", function(d) { return x(new Date(d.Year, 0)) })
+            .attr("cy", function(d) { return y(d.Value) })
+            .attr("r", 3)   
+
+
+          let maxValue = 0;
+
+          //////////////////////////////////////////////////
+          ////////////////// FATE CHART ////////////////////
+          //////////////////////////////////////////////////
+
+          const [fateWidth, fateHeight, fateMargin] = [450, 450, 40];
+
+          const fateRadius = Math.min(fateWidth, fateHeight) / 2 - fateMargin;
+
+          const fateSVG = d3.select("#fate-chart")
+            .append("svg")
+              .attr("width", fateWidth)
+              .attr("height", fateHeight)
+            .append("g")
+              .attr("transform", "translate(" + fateWidth / 2 + "," + fateHeight / 2 + ")");
+            
+          const fateSvgText = fateSVG
+            .append("text")
+              .attr("text-anchor", "middle")
+              .text("2015")
+              .style("font-family", "Montserrat")
+              .style("font-size", "24px")
+              .attr("fill", "steelblue")
+              .attr("dy", ".5em");
+
+          const fateColor = d3.scaleOrdinal()
+            .domain(["Discarded", "Incinerated", "Recycled"])
+            .range(grays);
+
+          let fateDataFiltered = fateData.filter(d => d.Year === "2000");
+          
+          const fateArcGenerator = d3.arc()
+            .innerRadius(75)
+            .outerRadius(fateRadius);
+
+          const fatePie = d3.pie();
+
+          let fateTooltip = d3.select("body").append("div")
+            .attr("class", "fate-tooltip")
+            .style("opacity", 0);
+
+          const genFateText = function(d) {
+            switch (d.Entity) {
+              case "Discarded":
+                return d.Entity.toUpperCase();
+              case "Incinerated":
+                return parseFloat(d["Estimated historic plastic fate"]) >= 12.9 ? d.Entity.toUpperCase() : "";
+              case "Recycled":
+                return parseFloat(d["Estimated historic plastic fate"]) >= 9.7 ? d.Entity.toUpperCase() : "";
+              default:
+                return "";
+            }
+          }
+
+          // FATE CHART
+          fateDataFiltered = fateData.filter(d => d.Year === "2015");
+          fateSVG
+            .selectAll("arc")
+            .data(fatePie(fateDataFiltered.map(d => d["Estimated historic plastic fate"])))
+            .join("path")
+              .attr("stroke", "white")
+              .style("stroke-width", "1px")
+              .attr("fill", (d,i) => fateColor(fateDataFiltered[i].Entity))
+              .attr("d", fateArcGenerator)
+              .on("mouseover", function(event,d) {
+                fateTooltip.transition()
+                  .style("opacity", 1);
+                fateTooltip.html(genCardHTML(fateImageSrcs[fateDataFiltered[d.index].Entity], fateDataFiltered[d.index].Entity, d.value + "%", fateDescriptions[fateDataFiltered[d.index].Entity]))
+                  .style("left", (event.pageX) + "px")
+                  .style("top", (event.pageY - 28) + "px");
+                })
+              .on("mousemove", function(event,d) {
+                fateTooltip
+                  .style("left", (event.pageX) + "px")
+                  .style("top", (event.pageY - 28) + "px");
+                })
+              .on("mouseout", function(d) {
+                fateTooltip.transition()
+                  .style("opacity", 0);
+                });
+
+          fateSVG
+            .selectAll("arc")
+            .data(fatePie(fateDataFiltered.map(d => d["Estimated historic plastic fate"])))
+            .join('text')
+              .text((d,i) => genFateText(fateDataFiltered[i]))
+              .attr("transform", d => "translate(" + fateArcGenerator.centroid(d) + ")")
+              .style("text-anchor", "middle")
+              .style("fill", "white")
+              .style("font-size", 17);
+
+          let barTooltip = d3.select("body").append("div")
+            .attr("class", "fate-tooltip")
+            .style("opacity", 0);
+
+          // add SVG 'rect' elements for bars
+          container.selectAll('rect')
+            .data(selected)
+            .join('rect')
+              .attr('x', 0)
+              .attr('y', 0)
+              .attr('width', d => xMargin(d.Value) - xMargin(0))
+              .attr('height', yMargin.bandwidth())
+              .style('fill', (d,i) => colorScale(categories[i]))
+              .style('stroke', 'white')
+              .attr('transform', (d,i) => `translate(${margin.left}, ${yMargin(categories[i])})`)
+              .on("mouseover", function(event,d) {
+                console.log(d);
+                barTooltip.transition()
+                  .style("opacity", 1);
+                barTooltip.html(genCardHTML(`${d.Value === "934100" ? "macroplastics.jpg" : "microplastics.png"}`, 
+                                            `${d.Value === "934100" ? "Macroplastics" : "Microplastics"}`, 
+                                            `${numberWithCommas(d.Value)}`,
+                                            `${d.Value === "934100" ? "Macroplastics are buoyant plastic materials larger than 0.5 centimeters in diameter. Examples include water bottles, packaging, or straws." : "Microplastics are buoyant plastic materials smaller than 0.5 centimeters in diameter. They can be hard to see, but easily ingested."}`))
+                  .style("left", (event.pageX) + "px")
+                  .style("top", (event.pageY - 28) + "px");
+                })
+              .on("mousemove", function(event,d) {
+                barTooltip
+                  .style("left", (event.pageX) + "px")
+                  .style("top", (event.pageY - 28) + "px");
+                })
+              .on("mouseout", function(d) {
+                barTooltip.transition()
+                  .style("opacity", 0);
+              });
+            
+          // add SVG 'text' elements for labels
+          container.selectAll('text')
+            .data(selected)
+            .join('text')
+              .attr('x', d => 5 + xMargin(d.Value))
+              .attr('y', (d, i) => yMargin.bandwidth()*(2-i))
+              .attr('dy', '-1em')
+              .attr('fill', 'black')
+              .style('font-size', 'small')
+              .text(d => numberWithCommas(d.Value))
+
+          // add title
+          container.append('g')
+            .append('text')
+              .attr('text-anchor', 'middle')
+              .attr('fill', 'black')
+              .style('font-size', '18px')
+              .attr('x', width/2)
+              .attr('y', margin.top)
+              .attr('dy', '-.5em')
+              .text('Plastics on Ocean Surface (2015)');
+            
+          // add x-axis
+          container.append('g')
+            .attr('transform', `translate(0, ${height - margin.bottom})`)
+            .call(d3.axisBottom(xMargin).ticks(5))
+            .append('text')
+              .attr('text-anchor', 'middle')
+              .attr('fill', 'black')
+              .attr('font-weight', 'bold')
+              .attr('x', width/2)
+              .attr('y', 45)
+              .text('Weight (tonnes)');
+            
+          // add y-axis with rotated labels
+          container.append('g')
+            .attr('transform', `translate(${margin.left}, 0)`)
+            .call(d3.axisLeft(yMargin))
+            .selectAll("text")
+              .attr("dx", "1em")
+              .attr("dy", "-1em")
+              .style("text-anchor", "middle")
+              .attr("transform", "rotate(-90)");
+
+          // This allows to find the closest X index of the mouse:
+          const bisect = d3.bisector(function(d) { return new Date(d.Year, 0); }).center;
+
+          // Create the text that accompanies your cursor
+          const focusTextYear = svg
+            .append('g')
+            .append('text')
+            .style("opacity", 0)
+            .style('font-size', 70)
+            .style('font-weight', 700)
+              
+          const focusTextValue = svg
+            .append('g')
+            .append('text')
+            .style("opacity", 0)
+            .style('font-size', 30)
+            .style('fill', 'steelblue')
+
+          //////////////////////////////////////////////////
+          ////////////////// UPDATE ////////////////////
+          //////////////////////////////////////////////////
+
+          const update = function(val) {
+            const newYear = maxYear - val
+            const newIndex = globalData.length - (maxYear - val)
+            const newData = globalData.slice(0, newIndex)
+            maxValue = d3.max(newData, function(d) { return +d.Value; })
+            x.domain([new Date(minYear, 0), new Date(val, 0)])
+                .range([ 0, lineWidth ]);
+            y.domain([0, maxValue])
+              .range([ lineHeight, 0 ]);
+
+            xLineScale
+            .transition()
+            .duration(150)
+            .ease(d3.easeLinear)
+            .call(xLineAxis);
+
+            yLineScale
+            .transition()
+            .duration(150)
+            .ease(d3.easeLinear)
+            .call(yLineAxis);
+
+            curve
+              .datum(newData)
+              .transition()
+              .duration(150)
+              .ease(d3.easeLinear)
+              .attr("d", d3.line()
+                .x(function(d) { return x(new Date(d.Year, 0)) })
+                // .y(y(0))
+                .y(function(d) { return y(d.Value) })
+              )
+            
+            svg.selectAll("circle")
+              .data(newData)
+              .join("circle")
+                .transition()
+                .duration(150)
+                .ease(d3.easeLinear)
+                .attr("fill", "black")
+                .attr("stroke", "white")
+                .attr("cx", function(d) { return x(new Date(d.Year, 0)) })
+                .attr("cy", function(d) { return y(d.Value) })
+                .attr("r", 3)
+
+            // Line cursor logic adapted from https://www.d3-graph-gallery.com/graph/line_cursor.html
+            
+            // // This allows to find the closest X index of the mouse:
+            // var bisect = d3.bisector(function(d) { return new Date(d.Year, 0); }).center;
+
+          /////////////////////////////////////////
+          ///// Add y-axis hover tooltips /////////
+          /////////////////////////////////////////
+
+            // Create a rect on top of the svg area: this rectangle recovers mouse position
+            svg.selectAll('rect').remove();
+            svg
+              .append('rect')
+              .style("fill", "none")
+              .style("pointer-events", "all")
+              .attr('width', lineWidth+15)
+              .attr('height', lineHeight)
+              .on('mouseover', mouseover)
+              .on('mousemove', mousemove)
+              .on('mouseout', mouseout);
+
+            // Extra larger circle that appears when hovered over
+            const focus = svg.append('circle')
+                .on('mouseover', mouseover)
+                .on('mousemove', mousemove)
+                .on('mouseout', mouseout);
+
+            let selectedData = null;
+
+            // What happens when the mouse move -> show the annotations at the right positions.
+            function mouseover() {
+              if (selectedData) {
+                focus
+                    .attr('r', 9)
+                    .attr("fill", "steelblue")
+                    .attr("stroke", "white")
+                    .attr("cx", x(new Date(selectedData.Year, 0)))
+                    .attr("cy", y(selectedData.Value))
+                    .style('opacity', .6)
+              }
+              focusTextYear.style("opacity",.3)
+              focusTextValue.style("opacity",.6)
+            }
+
+            function toolTipBoundingBox(x) {
+              let offset = 220;
+              if (x <= 10000000) offset += 0;
+              else if (x > 10000000 && x <= 100000000) offset += fontSize;
+              else  offset += (2 * fontSize);
+              
+              return lineWidth - offset;
+            }
+            function mousemove(event) {
+              // recover coordinate we need
+              var x0 = x.invert(d3.pointer(event)[0]);
+              var i = bisect(newData, x0, 0);
+              selectedData = newData[i]
+              if(selectedData) {
+                focus
+                  .attr('r', 9)
+                  .attr("fill", "steelblue")
+                  .attr("stroke", "white")
+                  .attr("cx", x(new Date(selectedData.Year, 0)))
+                  .attr("cy", y(selectedData.Value))
+                  .style('opacity', .6)
+                focusTextYear
+                  .html(selectedData.Year )
+                  .attr("x", lineWidth - 150)
+                  .attr("y", lineHeight - 50)
+                  .style('opacity', .3)
+                } 
+                focusTextValue
+                  .html(numberWithCommas(selectedData.Value) + " tonnes")
+                  .attr("x", toolTipBoundingBox(selectedData.Value))
+                  .attr("y", lineHeight - 20)
+                  .style('opacity', .6)
+              }
+            function mouseout() {
+              if (selectedData) {
+                focus
+                    .attr('r', 3)
+                    .attr("fill", "black")
+                    .attr("stroke", "none")
+                    .attr("cx", x(new Date(selectedData.Year, 0)))
+                    .attr("cy", y(selectedData.Value))
+              }
+              focusTextYear.style("opacity", 0)
+              focusTextValue.style("opacity", 0)
+            }
+
+            d3.select('p#value-total').html("In " + val + ", the world produced " + "<b>" + numberWithCommas(maxValue) + "</b>" + " tonnes of plastic in a single year");
+            d3.select('p#value-time').html("That's more than the mass of " + "<b>" + sliderDescriptions[sliderIndex]+ "</b>");
+          };
+
+          update(1950);
+
+          const calculateCarousel = (value) => {
+            const index = Math.floor(value/10-195);
+            if (value === 2015) return 7;
+            else return index;
+          }
+
+          const sliderTime = d3
+            .sliderBottom()
+            .min(minYear)
+            .max(maxYear)
+            .step(1)
+            .width(900)
+            .tickFormat(d3.format(""))
+            .default(1950)
+            .on('onchange', val => {
+              if (val <= maxYear) {
+                currentValue = val;
+                updateSlider(val);
+                update(val);
+              }
+            });
+
+          // Play button logic adapted from https://d19jftygre6gh0.cloudfront.net/officeofjane/47d2b0bfeecfcb41d2212d06d095c763
+          const playButton = d3.select("#play-button");
+          
+          playButton
+            .on("click", function(event) {
+              const button = d3.select(this);
+              if (button.text() == "Pause") {
+                moving = false;
+                clearInterval(timer);
+                // timer = 0;
+                button.text("Play");
+            } else {
+              if (currentValue < targetValue) {
+                moving = true;
+                timer = setInterval(step, 300);
+                button.text("Pause");
+              }
+            }
+          })
+
+          function step() {
+            // console.log('invert: ',x.invert(-100).getYear())
+            currentValue = currentValue + 1;
+            if (currentValue > targetValue) {
+              moving = false;
+              clearInterval(timer);
+              // timer = 0;
+              playButton.text("Play");
+              console.log("Slider moving: " + moving);
+            } else {
+              update(currentValue);
+              updateSlider(currentValue)
+              sliderTime.value(currentValue)
+            }
+          }
+
+          const gTime = d3
+            .select('div#slider-time')
+            .append('svg')
+            .attr('width', 950)
+            .attr('height', 100)
+            .append('g')
+            .attr('transform', 'translate(30,30)');
+
+          gTime.call(sliderTime);
+          
+          // d3.select('p#value-time').text(sliderTime.value());
+
+          document.getElementById("chart").appendChild(container.node());
+          });   
+      });
+    </script>
+  </body>
+</html>
